@@ -156,8 +156,15 @@
     .date-chip.active .date-lbl{color:rgba(255,255,255,.7)}
 
     /* SHOWTIME GROUPS */
-    .st-group{margin-bottom:1.5rem}
-    .st-group-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;padding:.4rem .8rem;background:var(--surface);border-radius:6px;display:inline-block;margin-bottom:.8rem;border:1px solid var(--border)}
+    .theater-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;transition:var(--t)}
+    .theater-card:hover{box-shadow:0 0 15px var(--purple-glow);border-color:rgba(124,58,237,.4)}
+    .theater-header{margin-bottom:1.2rem;border-bottom:1px solid var(--border);padding-bottom:.8rem}
+    .th-title{font-size:1.15rem;font-weight:800;color:var(--txt);margin-bottom:.2rem}
+    .th-loc{font-size:.85rem;color:var(--muted)}
+    .sc-group{margin-bottom:1rem}
+    .sc-group:last-child{margin-bottom:0}
+    .sc-label{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem;display:inline-block;padding:.2rem .6rem;background:rgba(255,255,255,.05);border-radius:4px}
+    
     .st-pills{display:flex;flex-wrap:wrap;gap:.6rem}
     .st-pill{padding:.45rem 1rem;border-radius:8px;background:var(--surface);border:2px solid var(--border);cursor:pointer;transition:var(--t);text-align:center}
     .st-pill:hover{border-color:rgba(124,58,237,.5)}
@@ -203,18 +210,62 @@
     .av-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.3rem}
 
     /* PAYMENT */
-    .pay-layout{display:grid;grid-template-columns:1fr 340px;gap:2.5rem;max-width:1280px;margin:0 auto;padding:2rem;align-items:start}
-    .pay-methods{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
-    .pay-method{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;background:var(--surface);border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:var(--t)}
-    .pay-method:hover{border-color:rgba(124,58,237,.4)}
-    .pay-method.sel{border-color:var(--purple);background:rgba(124,58,237,.08)}
-    .pay-method-icon{font-size:1.5rem;width:36px;text-align:center}
-    .pay-method-name{font-weight:600;font-size:.9rem}
+    .pay-layout{display:grid;grid-template-columns:1fr 360px;gap:3rem;max-width:1280px;margin:0 auto;padding:2rem;align-items:start}
+    .pay-section-title{font-size:1.15rem;font-weight:800;margin-bottom:1.2rem;display:flex;align-items:center;gap:.6rem;color:var(--txt)}
+    
+    .pay-methods{display:grid;grid-template-columns:1fr;margin-bottom:2.5rem}
+    .pay-method{display:flex;align-items:center;gap:1rem;padding:1.2rem;background:rgba(124,58,237,.06);border:1px solid var(--purple);border-radius:12px;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(124,58,237,.15)}
+    .pay-method-icon{font-size:1.8rem;width:40px;text-align:center;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+    .pay-method-name{font-weight:700;font-size:.95rem;margin-bottom:.1rem}
     .pay-method-sub{font-size:.75rem;color:var(--muted)}
-    .pay-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin:1.2rem 0}
-    .pay-card-logo{border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;align-items:center;justify-content:center;background:var(--surface);font-size:.8rem;font-weight:700;color:var(--muted)}
-    .terms-check{display:flex;align-items:center;gap:.7rem;padding:1rem;background:var(--surface);border-radius:10px;margin-bottom:1.2rem;font-size:.85rem;color:var(--muted);cursor:pointer}
-    .terms-check input{accent-color:var(--purple);width:16px;height:16px}
+    
+    .pay-form-wrap{background:var(--card);border-radius:16px;padding:2rem;border:1px solid var(--border);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+    .pay-cards{display:grid;grid-template-columns:repeat(3, 1fr);gap:.8rem;margin-bottom:2rem}
+    .pay-card-logo{border:2px solid var(--border);border-radius:10px;padding:1rem;display:flex;align-items:center;justify-content:center;background:var(--surface);font-size:.9rem;font-weight:800;color:var(--muted);transition:all .3s ease;cursor:pointer}
+    .pay-card-logo:hover{border-color:rgba(124,58,237,.4);background:var(--hover);transform:translateY(-2px)}
+    .pay-card-logo.sel{border-color:var(--purple);background:rgba(124,58,237,.1);color:var(--txt);box-shadow:0 0 15px rgba(124,58,237,.3)}
+    
+    .pay-input-icon{position:absolute;left:1.2rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;pointer-events:none}
+    .form-g.has-icon input{padding-left:3rem}
+    .eye-icon{position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1.1rem;cursor:pointer;padding:.3rem}
+    .eye-icon:hover{color:var(--txt)}
+    
+    .terms-check{display:flex;align-items:flex-start;gap:.8rem;padding:1.2rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;margin:2rem 0;font-size:.85rem;color:var(--muted);cursor:pointer;transition:var(--t);line-height:1.5}
+    .terms-check:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)}
+    .terms-check input{accent-color:var(--purple);width:18px;height:18px;margin-top:.1rem;cursor:pointer}
+    .terms-check a{color:var(--purple-light);font-weight:600;text-decoration:none}
+    .terms-check a:hover{text-decoration:underline}
+    
+    .btn-gradient{background:linear-gradient(135deg, var(--purple) 0%, #5b21b6 100%);color:#fff;border:none;box-shadow:0 8px 25px var(--purple-glow);transition:all .3s ease}
+    .btn-gradient:hover:not(:disabled){box-shadow:0 12px 30px rgba(124,58,237,.4);transform:translateY(-2px);filter:brightness(1.1)}
+    .btn-gradient:disabled{background:var(--surface);color:var(--muted);box-shadow:none;border:1px solid var(--border)}
+    .terms-check a{color:var(--purple-light);font-weight:600;text-decoration:none}
+    .terms-check a:hover{text-decoration:underline}
+
+    @media (max-width: 900px) {
+      .pay-layout { grid-template-columns: 1fr; }
+      .pay-methods { grid-template-columns: 1fr; }
+    }
+
+    /* FEEDBACK MODAL */
+    .fb-modal{background:var(--card);max-width:480px;width:90%;margin:5vh auto;border-radius:16px;border:1px solid var(--border);padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,.7);position:relative}
+    .fb-title{font-size:1.5rem;font-weight:800;color:var(--txt);margin-bottom:.5rem;text-align:center}
+    .fb-subtitle{font-size:.9rem;color:var(--muted);text-align:center;margin-bottom:1.5rem}
+    .fb-summary{background:var(--surface);border-radius:12px;padding:1.2rem;margin-bottom:1.5rem;border:1px solid var(--border);font-size:.85rem}
+    .fb-sum-row{display:flex;justify-content:space-between;margin-bottom:.6rem;color:var(--muted)}
+    .fb-sum-row span.val{color:var(--txt);font-weight:600}
+    .fb-stars{display:flex;justify-content:center;gap:1rem;margin-bottom:1.5rem;flex-direction:row-reverse}
+    .fb-star{font-size:2.5rem;color:var(--muted);cursor:pointer;transition:var(--t)}
+    .fb-star:hover, .fb-star:hover ~ .fb-star, .fb-star.active, .fb-star.active ~ .fb-star{color:#f59e0b;filter:drop-shadow(0 0 10px rgba(245,158,11,.4))}
+    .fb-tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.5rem;justify-content:center}
+    .fb-tag{padding:.4rem 1rem;border-radius:99px;border:1px solid var(--border);font-size:.8rem;color:var(--muted);cursor:pointer;transition:var(--t)}
+    .fb-tag:hover, .fb-tag.active{background:rgba(124,58,237,.1);border-color:var(--purple);color:var(--purple-light)}
+    .fb-text{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;color:var(--txt);font-family:inherit;font-size:.9rem;resize:vertical;min-height:100px;margin-bottom:1.5rem}
+    .fb-text:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+    .fb-actions{display:flex;gap:1rem;flex-direction:column}
+    select { appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%23a0a0a0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+
+
 
     /* MY BOOKINGS */
     .bk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;transition:var(--t)}
@@ -251,9 +302,9 @@
 
     /* MODAL */
     .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
-    .modal-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.8rem;max-width:480px;width:100%;z-index:501;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-height:90vh;overflow-y:auto}
+    .modal-box{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.8rem;max-width:550px;width:100%;z-index:501;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-height:90vh;overflow-y:auto;overflow-x:hidden}
 
-    /* TOAST */
+    /* SPINNER / EMPTY */
     .spin{width:24px;height:24px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .loading{display:flex;align-items:center;justify-content:center;gap:.8rem;padding:2rem;color:var(--muted);font-size:.9rem}
@@ -296,7 +347,6 @@
       <button class="btn btn-surface btn-lg" onclick="navigate('register')">Create Account</button>
     </div>
   </div>
-  <!-- Quick Book Bar -->
   <div class="qb-bar">
     <span style="font-size:.85rem;font-weight:600;color:var(--muted)">Quick Book:</span>
     <select id="qb-movie" onchange="qbFilter()"><option value="">Select Movie</option></select>
@@ -355,7 +405,18 @@
         <div class="form-g"><label>Full Name</label><input id="rg-name" placeholder="John Doe" required></div>
         <div class="form-g"><label>Email Address</label><input id="rg-email" type="email" placeholder="name@example.com" required></div>
         <div class="form-g"><label>Password</label><input id="rg-pwd" type="password" placeholder="Min. 6 chars" required minlength="6"></div>
-        <div class="form-g"><label>Role</label><select id="rg-role"><option value="USER">User</option><option value="ADMIN">Admin</option></select></div>
+        <div class="form-g">
+          <label>Role</label>
+          <select id="rg-role" onchange="toggleAdminKey()">
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </div>
+
+        <div class="form-g hidden" id="admin-key-box">
+          <label>Admin Management Key</label>
+          <input id="admin-key" type="password" placeholder="Enter admin key">
+        </div>
         <div class="err-msg hidden" id="rg-err"></div>
         <button type="submit" class="btn btn-purple btn-block btn-lg" id="rg-btn">Register</button>
       </form>
@@ -366,12 +427,10 @@
 
 <!-- BOOKING -->
 <div id="page-booking" class="page hidden">
-  <!-- Movie hero -->
   <div class="mv-hero" id="bk-hero">
     <div class="loading"><div class="spin"></div></div>
   </div>
 
-  <!-- Breadcrumb -->
   <div class="breadcrumb" id="bk-breadcrumb">
     <div class="bc-back" onclick="navigate('movies')">← Back</div>
     <div class="bc-step done" id="bc1">Choose Cinema</div>
@@ -381,25 +440,20 @@
     <div class="bc-step" id="bc3">Payment</div>
   </div>
 
-  <!-- Date strip -->
   <div class="date-strip" id="date-strip"></div>
 
-  <!-- Availability legend -->
   <div class="av-legend">
     <span><span class="av-dot" style="background:#4db885"></span> Available</span>
     <span><span class="av-dot" style="background:var(--purple)"></span> Selected</span>
     <span><span class="av-dot" style="background:#1e1e1e;border:1px solid #333"></span> Occupied</span>
   </div>
 
-  <!-- Main booking area -->
   <div class="bk-layout" id="bk-main" style="display:none">
     <div>
-      <!-- Showtimes -->
       <div id="bk-st-sec" style="margin-bottom:2rem">
         <h3 style="margin-bottom:1.2rem;font-size:1rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Select Showtime</h3>
         <div id="st-groups"></div>
       </div>
-      <!-- Seat map -->
       <div id="bk-seat-sec" class="hidden seat-wrap">
         <h3 style="text-align:center;margin-bottom:2rem;font-size:1rem;font-weight:700">Pick Your Seats</h3>
         <div class="screen-bar"></div>
@@ -412,12 +466,16 @@
       </div>
     </div>
 
-    <!-- Booking Summary Sidebar -->
+    <!-- ── Booking Summary Sidebar ── -->
     <div class="bk-summary">
       <div class="bk-sum-head">Booking Summary</div>
       <div class="bk-sum-movie" id="sum-movie-info">
-        <div style="width:56px;height:80px;background:var(--surface);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🎬</div>
-        <div><div class="bk-sum-title" id="sum-title">—</div><div class="bk-sum-sub" id="sum-sub">Select a showtime to begin</div></div>
+        <!-- poster injected by updSum() -->
+        <div id="sum-poster-placeholder" style="width:56px;height:80px;background:var(--surface);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">🎬</div>
+        <div>
+          <div class="bk-sum-title" id="sum-title">—</div>
+          <div class="bk-sum-sub" id="sum-sub">Select a showtime to begin</div>
+        </div>
       </div>
       <div class="bk-sum-body">
         <div class="bk-sum-row"><span class="lbl">Date & Time</span><span class="val" id="sum-dt">—</span></div>
@@ -433,58 +491,103 @@
   </div>
 </div>
 
+
 <!-- PAYMENT PAGE -->
 <div id="page-payment" class="page hidden">
-  <!-- Breadcrumb -->
   <div class="breadcrumb">
     <div class="bc-back" onclick="navigate('booking',{id:window._bm?.id})">← Back</div>
-    <div class="bc-step done">Choose Cinema</div>
+    <div class="bc-step done" style="cursor:pointer" onclick="navigate('movies')">Choose Cinema</div>
     <div class="bc-arrow">›</div>
-    <div class="bc-step done">Select Seats</div>
+    <div class="bc-step done" style="cursor:pointer" onclick="navigate('booking',{id:window._bm?.id})">Select Seats</div>
     <div class="bc-arrow">›</div>
     <div class="bc-step active">Payment</div>
   </div>
 
   <div class="pay-layout">
-    <div>
-      <h2 style="margin-bottom:1.5rem;font-size:1.1rem;font-weight:700">Payment Methods</h2>
-      <div class="pay-methods" id="pay-methods">
-        <div class="pay-method sel" onclick="selPay(this,'CARD')">
+    <div class="pay-main">
+      <div class="pay-section-title">💳 Payment Method</div>
+      <div class="pay-methods">
+        <div class="pay-method sel">
           <div class="pay-method-icon">💳</div>
-          <div><div class="pay-method-name">Credit / Debit Card</div><div class="pay-method-sub">Visa, Mastercard, JCB</div></div>
-        </div>
-        <div class="pay-method" onclick="selPay(this,'UPI')">
-          <div class="pay-method-icon">📱</div>
-          <div><div class="pay-method-name">UPI Payment</div><div class="pay-method-sub">Instant bank transfer</div></div>
-        </div>
-        <div class="pay-method" onclick="selPay(this,'NB')">
-          <div class="pay-method-icon">🏦</div>
-          <div><div class="pay-method-name">Net Banking</div><div class="pay-method-sub">All major banks supported</div></div>
+          <div>
+            <div class="pay-method-name">Credit / Debit Card</div>
+            <div class="pay-method-sub">Visa, Mastercard, Amex</div>
+          </div>
         </div>
       </div>
 
-      <div id="card-section">
-        <div style="font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:.8rem">Accepted Cards</div>
+      <div class="pay-form-wrap">
+        <div class="pay-section-title" style="margin-bottom:0.5rem;font-size:1.05rem">🔒 Secure Payment</div>
+        <p style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem">All transactions are secure and encrypted.</p>
+
         <div class="pay-cards">
-          <div class="pay-card-logo" style="color:#1a1f71;background:#e8eaf6;border:none;font-size:1.1rem;font-weight:800">VISA</div>
-          <div class="pay-card-logo" style="background:#f5f5f5;border:none"><span style="color:#eb001b;font-size:1.4rem">●</span><span style="color:#f79e1b;font-size:1.4rem;margin-left:-.4rem">●</span></div>
-          <div class="pay-card-logo" style="background:#003087;color:#fff;border:none;font-weight:800">JCB</div>
+          <div class="pay-card-logo sel" onclick="document.querySelectorAll('.pay-card-logo').forEach(e=>e.classList.remove('sel')); this.classList.add('sel')" style="color:#1a1f71">
+            <span style="font-weight:900;font-style:italic">VISA</span>
+          </div>
+          <div class="pay-card-logo" onclick="document.querySelectorAll('.pay-card-logo').forEach(e=>e.classList.remove('sel')); this.classList.add('sel')" style="color:#eb001b">
+            <div style="display:flex;align-items:center"><div style="width:14px;height:14px;border-radius:50%;background:#eb001b;margin-right:-4px;mix-blend-mode:multiply"></div><div style="width:14px;height:14px;border-radius:50%;background:#f79e1b;mix-blend-mode:multiply"></div></div><span style="margin-left:6px">Mastercard</span>
+          </div>
+          <div class="pay-card-logo" onclick="document.querySelectorAll('.pay-card-logo').forEach(e=>e.classList.remove('sel')); this.classList.add('sel')" style="color:#27aae1">
+            <span style="font-weight:900">AMEX</span>
+          </div>
+        </div>
+
+        <div id="card-payment-form">
+          <div class="form-g has-icon" style="position:relative">
+            <label>Card Number *</label>
+            <span class="pay-input-icon">💳</span>
+            <input type="text" id="card-number" maxlength="19" placeholder="0000 0000 0000 0000" oninput="validatePaymentForm(); this.value = this.value.replace(/[^0-9 ]/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')">
+          </div>
+
+          <div class="form-row">
+            <div class="form-g">
+              <label>Expiration *</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+                <select id="card-month" onchange="validatePaymentForm()">
+                  <option value="">MM</option>
+                  <option>01</option><option>02</option><option>03</option><option>04</option>
+                  <option>05</option><option>06</option><option>07</option><option>08</option>
+                  <option>09</option><option>10</option><option>11</option><option>12</option>
+                </select>
+                <select id="card-year" onchange="validatePaymentForm()">
+                  <option value="">YYYY</option>
+                  <option>2026</option><option>2027</option><option>2028</option>
+                  <option>2029</option><option>2030</option><option>2031</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-g has-icon" style="position:relative">
+              <label>CVV *</label>
+              <input type="password" id="card-cvn" maxlength="4" placeholder="123" oninput="validatePaymentForm(); this.value = this.value.replace(/[^0-9]/g, '')">
+              <span class="eye-icon" onclick="const i=document.getElementById('card-cvn');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁️':'🔒'">👁️</span>
+            </div>
+          </div>
+        </div>
+
+        <label class="terms-check">
+          <input type="checkbox" id="terms-cb" onchange="validatePaymentForm()">
+          <span>
+            I have read and accepted the CinéMax
+            <a href="#">Terms & Conditions</a>
+            and privacy policy.
+          </span>
+        </label>
+
+        <div class="err-msg hidden" id="pay-err"></div>
+        <button class="btn btn-block btn-lg btn-gradient" id="pay-final-btn" disabled onclick="doPayment()" style="font-size:1.05rem;margin-top:1rem;border-radius:99px;padding:1rem">
+          🔒 Confirm Payment — <span id="pay-btn-amt">LKR 0</span>
+        </button>
+        <div style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:1.5rem;display:flex;align-items:center;justify-content:center;gap:.4rem">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Your payment details are 100% secure and encrypted.
         </div>
       </div>
-
-      <label class="terms-check">
-        <input type="checkbox" id="terms-cb" onchange="checkTerms()">
-        I have read and accepted the CinéMax <a href="#" style="color:var(--purple)">Terms & Conditions</a> of this transaction
-      </label>
-
-      <div class="err-msg hidden" id="pay-err"></div>
-      <button class="btn btn-purple btn-block btn-lg" id="pay-final-btn" disabled onclick="doPayment()">Confirm Payment</button>
     </div>
 
-    <!-- Summary sidebar repeated on payment page -->
-    <div class="bk-summary">
-      <div class="bk-sum-head">Booking Summary</div>
-      <div class="bk-sum-movie">
+    <div class="bk-summary" style="border:none;box-shadow:0 15px 40px rgba(0,0,0,.4)">
+      <div class="bk-sum-head" style="background:var(--surface);font-size:1.1rem">Booking Summary</div>
+      <div class="bk-sum-movie" style="background:var(--card)">
         <img id="pay-sum-poster" src="" onerror="this.style.display='none'" class="bk-sum-poster" style="display:none">
         <div style="width:56px;height:80px;background:var(--surface);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0" id="pay-sum-icon">🎬</div>
         <div>
@@ -492,19 +595,25 @@
           <div class="bk-sum-sub" id="pay-sum-sub">—</div>
         </div>
       </div>
+
       <div class="bk-sum-body">
         <div class="bk-sum-row"><span class="lbl">Date & Time</span><span class="val" id="pay-sum-dt">—</span></div>
         <div class="bk-sum-row"><span class="lbl">Seat Info</span><span class="val" id="pay-sum-seats">—</span></div>
         <div class="bk-sum-row"><span class="lbl">Tickets</span><span class="val" id="pay-sum-tickets">—</span></div>
       </div>
-      <div class="bk-sum-body" style="border-top:1px solid var(--border);padding-top:1rem">
+
+      <div class="bk-sum-body" style="border-top:1px solid var(--border);padding-top:1.2rem">
         <div class="bk-sum-row"><span class="lbl">Sub Total</span><span class="val" id="pay-sum-sub2">LKR 0</span></div>
         <div class="bk-sum-row"><span class="lbl">Taxes & Fees</span><span class="val" id="pay-sum-tax">LKR 0</span></div>
       </div>
-      <div class="bk-sum-total"><span>To be Paid</span><span class="amt" id="pay-sum-total">LKR 0</span></div>
+
+      <div class="bk-sum-total" style="padding:1.2rem 1.4rem;font-size:1.1rem">
+        <span>To be Paid</span><span class="amt" id="pay-sum-total">LKR 0</span>
+      </div>
     </div>
   </div>
 </div>
+
 
 <!-- MY BOOKINGS -->
 <div id="page-mybookings" class="page hidden">
@@ -524,6 +633,7 @@
       <div class="sb-item" onclick="admNav('st')">⏰ Showtimes</div>
       <div class="sb-item" onclick="admNav('bk')">🎟️ Bookings</div>
       <div class="sb-item" onclick="admNav('th')">🏛️ Theaters</div>
+      <div class="sb-item" onclick="admNav('fb')">⭐ User Reviews</div>
     </aside>
     <main class="admin-main">
       <div id="adm-dash">
@@ -544,11 +654,25 @@
       </div>
       <div id="adm-bk" class="hidden">
         <div class="sec-header"><h2>All Bookings</h2></div>
-        <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>User</th><th>Movie</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody id="tbl-bk"></tbody></table></div>
+        <div class="tbl-wrap"><table><thead><tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Movie</th>
+          <th>Theater</th>
+          <th>Date & Time</th>
+          <th>Seats</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr></thead><tbody id="tbl-bk"></tbody></table></div>
       </div>
       <div id="adm-th" class="hidden">
         <div class="sec-header"><h2>Theaters</h2><button class="btn btn-purple btn-sm" onclick="openThModal()">+ Add New</button></div>
         <div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Location</th><th>Screens</th><th>Actions</th></tr></thead><tbody id="tbl-th"></tbody></table></div>
+      </div>
+      <div id="adm-fb" class="hidden">
+        <div class="sec-header"><h2>User Reviews</h2></div>
+        <div class="tbl-wrap"><table><thead><tr><th>ID</th><th>User</th><th>Movie</th><th>Booking ID</th><th>Rating</th><th>Comment</th><th>Date</th><th>Actions</th></tr></thead><tbody id="tbl-fb"></tbody></table></div>
       </div>
     </main>
   </div>
@@ -558,6 +682,41 @@
 <div id="toasts" style="position:fixed;bottom:2rem;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:.8rem"></div>
 <div id="modal-bg" class="modal-bg hidden" onclick="closeModal()"></div>
 <div id="modal-box" class="modal-box hidden"></div>
+
+<script type="text/template" id="fb-modal-tpl">
+  <div class="fb-modal">
+    <div class="fb-title">Review & Feedback</div>
+    <div class="fb-subtitle">Thank you for booking with CinéMax!</div>
+    
+    <div class="fb-summary">
+      <div class="fb-sum-row"><span>Booking ID</span><span class="val" id="fb-b-id">—</span></div>
+      <div class="fb-sum-row"><span>Movie</span><span class="val" id="fb-b-movie">—</span></div>
+      <div class="fb-sum-row"><span>Seats</span><span class="val" id="fb-b-seats">—</span></div>
+    </div>
+    
+    <div class="fb-stars">
+      <span class="fb-star" data-val="5" onclick="fbRate(5)">★</span>
+      <span class="fb-star" data-val="4" onclick="fbRate(4)">★</span>
+      <span class="fb-star" data-val="3" onclick="fbRate(3)">★</span>
+      <span class="fb-star" data-val="2" onclick="fbRate(2)">★</span>
+      <span class="fb-star" data-val="1" onclick="fbRate(1)">★</span>
+    </div>
+    
+    <div class="fb-tags">
+      <span class="fb-tag" onclick="fbToggleTag(this)">Seat Experience</span>
+      <span class="fb-tag" onclick="fbToggleTag(this)">Booking Experience</span>
+      <span class="fb-tag" onclick="fbToggleTag(this)">Payment Experience</span>
+      <span class="fb-tag" onclick="fbToggleTag(this)">Cinema Experience</span>
+    </div>
+    
+    <textarea class="fb-text" placeholder="Share your movie booking experience..."></textarea>
+    
+    <div class="fb-actions">
+      <button class="btn btn-purple btn-block" onclick="submitFeedback()">Submit Review</button>
+      <button class="btn btn-ghost btn-block" onclick="closeFeedbackModal()">Maybe Later</button>
+    </div>
+  </div>
+</script>
 
 <script>
   /* ───── AUTH ───── */
@@ -574,8 +733,8 @@
   async function req(p, o = {}) {
     const h = { 'Content-Type': 'application/json', ...o.headers };
     const t = A.getToken(); if (t) h.Authorization = `Bearer ${t}`;
-    try {
-      const r = await fetch(p, { ...o, headers: h });
+     try {
+    const r = await fetch('http://localhost:8085' + p, { ...o, headers: h });
       const tx = await r.text();
       let d; try { d = JSON.parse(tx); } catch { d = { message: tx }; }
       if (!r.ok) { const m = d.message || d.error || (d.errors ? d.errors.map(x => x.defaultMessage).join(', ') : null) || 'Server Error'; throw new Error(m); }
@@ -587,14 +746,14 @@
   }
   const API = {
     login: b => req('/api/auth/login', { method: 'POST', body: JSON.stringify(b) }),
-    register: b => req('/api/users/register', { method: 'POST', body: JSON.stringify(b) }),
-    getMovies: () => req('/api/movies'),
+    register: b => req('/api/auth/register', { method: 'POST', body: JSON.stringify(b) }),    getMovies: () => req('/api/movies'),
     getMovie: id => req(`/api/movies/${id}`),
     postMovie: b => req('/api/movies', { method: 'POST', body: JSON.stringify(b) }),
     putMovie: (id, b) => req(`/api/movies/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
     delMovie: id => req(`/api/movies/${id}`, { method: 'DELETE' }),
     getShowtimes: id => req(id ? `/api/showtimes/movie/${id}` : '/api/showtimes'),
     getShowtime: id => req(`/api/showtimes/${id}`),
+    getSeatsByShowtime: id => req(`/api/seats/showtime/${id}`),
     postShowtime: b => req('/api/showtimes', { method: 'POST', body: JSON.stringify(b) }),
     putShowtime: (id, b) => req(`/api/showtimes/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
     delShowtime: id => req(`/api/showtimes/${id}`, { method: 'DELETE' }),
@@ -604,11 +763,15 @@
     cancelBooking: id => req(`/api/bookings/${id}/cancel`, { method: 'PUT' }),
     processPayment: b => req('/api/payments', { method: 'POST', body: JSON.stringify(b) }),
     getAllPayments: () => req('/api/payments'),
+    postFeedback: b => req('/api/feedback', { method: 'POST', body: JSON.stringify(b) }),
+    getAllFeedback: () => req('/api/feedback/admin/all'),
+    delFeedback: id => req(`/api/feedback/${id}`, { method: 'DELETE' }),
     getTheaters: () => req('/api/theaters'),
     getTheater: id => req(`/api/theaters/${id}`),
     postTheater: b => req('/api/theaters', { method: 'POST', body: JSON.stringify(b) }),
     putTheater: (id, b) => req(`/api/theaters/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
-    delTheater: id => req(`/api/theaters/${id}`, { method: 'DELETE' })
+    delTheater: id => req(`/api/theaters/${id}`, { method: 'DELETE' }),
+    getScreens: () => req('/api/screens')
   };
 
   /* ───── UTILS ───── */
@@ -635,13 +798,15 @@
     document.getElementById(`page-${p}`)?.classList.remove('hidden');
     renderNav(); INIT[p]?.(); window.scrollTo(0, 0);
   }
+
+  /* ─── FIX 1: Nav — "My Tickets" no longer appears twice ─── */
   function renderNav() {
     const u = A.getUser(), li = A.isLoggedIn();
     document.getElementById('nav-links').innerHTML = `
       <span class="nav-link ${curP==='home'?'active':''}" onclick="navigate('home')">Home</span>
-      ${li && !A.isAdmin() ? `<span class="nav-link ${curP==='mybookings'?'active':''}" onclick="navigate('mybookings')">My Tickets</span>` : ''}      ${li ? `<span class="nav-link ${curP==='mybookings'?'active':''}" onclick="navigate('mybookings')">My Tickets</span>` : ''}
+      ${li && !A.isAdmin() ? `<span class="nav-link ${curP==='mybookings'?'active':''}" onclick="navigate('mybookings')">My Tickets</span>` : ''}
       ${li && A.isAdmin() ? `<span class="nav-link ${curP==='admin'?'active':''}" onclick="navigate('admin')">Admin</span>` : ''}`;
-     document.getElementById('nav-actions').innerHTML = li
+      document.getElementById('nav-actions').innerHTML = li
       ? `<span style="font-size:.85rem;color:var(--muted)">Hi, ${u.name.split(' ')[0]}</span><button class="btn btn-ghost btn-sm" onclick="A.logout()">Logout</button>`
       : `<button class="btn btn-ghost btn-sm" onclick="navigate('login')">Login</button><button class="btn btn-purple btn-sm" onclick="navigate('register')">Register</button>`;
   }
@@ -669,11 +834,17 @@
       document.getElementById('bk-main').style.display = 'none';
       document.getElementById('bk-seat-sec').classList.add('hidden');
       document.getElementById('bk-hero').innerHTML = '<div class="loading"><div class="spin"></div></div>';
+      // Reset state on each booking page load
+      window._st = null;
+      window._ss = [];
+      window._occupiedSeats = [];
       try {
         const m = await API.getMovie(id); window._bm = m.data || m;
         renderBkHero(window._bm);
+        const [sts, ths] = await Promise.all([API.getShowtimes(id), API.getTheaters()]);
+        window._sts = sts.data || sts;
+        window._ths = ths.data || ths;
         buildDateStrip();
-        const sts = await API.getShowtimes(id); window._sts = sts.data || sts;
         renderSTGroups(window._sts);
         document.getElementById('bk-main').style.display = '';
         updSum();
@@ -699,8 +870,9 @@
                 <div class="bk-card-title">${b.movieTitle || 'Movie Ticket'}</div>
                 <div class="bk-card-meta">
                   <span>🏛️ ${b.theaterName || 'CinéMax Cinema'}</span>
-                  <span>📅 ${fmtD(b.bookingDate)}</span>
-                  <span>🎫 ${b.seatIds?.join(', ') || 'N/A'}</span>
+                  <span>📅 ${fmtD(b.showtime)} ${fmtT(b.showtime)}</span>
+                  <span>🎫 ${b.seatNumbers?.join(', ') || 'N/A'}</span>
+                  <span>🎟️ ${b.seatNumbers?.length || 0} Tickets</span>
                 </div>
                 <span class="status status-${b.status}">${b.status}</span>
               </div>
@@ -710,7 +882,18 @@
               ${b.status !== 'CANCELLED' ? `<button class="btn btn-ghost btn-sm" onclick="cancelBk(${b.id})">Cancel Ticket</button>` : ''}
             </div>
           </div>`).join('') : '<p class="empty"><div class="ico">🎟️</div>No tickets found. Book your first movie!</p>';
-      } catch { list.innerHTML = '<p class="empty">Failed to load tickets.</p>'; }
+          
+          // Check for pending feedback
+          const pendingId = localStorage.getItem('pendingFeedbackBookingId');
+          if (pendingId) {
+            const pendingBooking = bks.find(b => b.id == pendingId);
+            if(pendingBooking) openFeedbackModal(pendingBooking);
+            localStorage.removeItem('pendingFeedbackBookingId');
+          }
+      } catch (e) {
+        console.error("MY BOOKINGS ERROR:", e);
+        list.innerHTML = `<p class="empty">Failed to load tickets. Error: ${e.message}</p>`; 
+      }
     },
     admin: () => admNav('dash')
   };
@@ -724,7 +907,7 @@
     const mv = type === 'now'
       ? _allMovies.filter(m => m.status === 'NOW_SHOWING' || !m.status)
       : _allMovies.filter(m => m.status === 'COMING_SOON');
-    g.innerHTML = (mv.length ? mv : _allMovies).slice(0, 8).map(m => mCard(m)).join('') || '<p class="empty">Nothing here yet.</p>';
+    g.innerHTML = (mv.length ? mv : _allMovies).map(m => mCard(m)).join('') || '<p class="empty">Nothing here yet.</p>';
   }
   function populateQB(mv) {
     const sel = document.getElementById('qb-movie');
@@ -769,17 +952,32 @@
     e.preventDefault(); const b = document.getElementById('li-btn'); b.disabled = true; b.textContent = 'Signing in…';
     const err = document.getElementById('li-err'); err.classList.add('hidden');
     try {
-      const d = await API.login({ email: document.getElementById('li-email').value, password: document.getElementById('li-pwd').value });
+      const r = await API.login({ email: document.getElementById('li-email').value, password: document.getElementById('li-pwd').value });
+      const d = r.data || r;
       A.save(d.token, { id: d.userId, name: d.name || 'User', role: d.role || 'USER' });
       toast('Welcome back! 🎬'); navigate('home');
     } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
     finally { b.disabled = false; b.textContent = 'Sign In'; }
   }
+   function toggleAdminKey() {
+       const role = document.getElementById('rg-role').value;
+       document.getElementById('admin-key-box').classList.toggle('hidden', role !== 'ADMIN');
+   }
   async function doReg(e) {
     e.preventDefault(); const b = document.getElementById('rg-btn'); b.disabled = true;
     const err = document.getElementById('rg-err'); err.classList.add('hidden');
     try {
-      await API.register({ name: document.getElementById('rg-name').value, email: document.getElementById('rg-email').value, password: document.getElementById('rg-pwd').value, role: document.getElementById('rg-role').value });
+      const role = document.getElementById('rg-role').value;
+
+      await API.register({
+         name: document.getElementById('rg-name').value,
+         email: document.getElementById('rg-email').value,
+         password: document.getElementById('rg-pwd').value,
+         role: role,
+         adminKey: role === 'ADMIN'
+         ? document.getElementById('admin-key').value
+         : null
+      }   );
       toast('Account created! Please sign in.'); navigate('login');
     } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
     finally { b.disabled = false; }
@@ -806,7 +1004,27 @@
 
   function buildDateStrip() {
     const strip = document.getElementById('date-strip');
-    const days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+    const sts = window._sts || [];
+    
+    let days = [];
+    if (sts.length > 0) {
+      const uniqueDateStrings = [...new Set(sts.map(s => new Date(s.startTime).toDateString()))];
+      days = uniqueDateStrings.map(ds => new Date(ds)).sort((a,b) => a-b);
+      
+      // Pad to ensure at least 7 days are shown in the UI strip
+      if (days.length < 7) {
+        let lastDate = days[days.length - 1];
+        while(days.length < 7) {
+          let nextDate = new Date(lastDate);
+          nextDate.setDate(nextDate.getDate() + 1);
+          days.push(nextDate);
+          lastDate = nextDate;
+        }
+      }
+    } else {
+      days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+    }
+
     window._selDate = days[0].toDateString();
     strip.innerHTML = days.map((d, i) => `
       <div class="date-chip ${i===0?'active':''}" onclick="selDate('${d.toDateString()}',this)">
@@ -819,49 +1037,128 @@
   function selDate(ds, el) {
     document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active')); el.classList.add('active');
     window._selDate = ds;
+    
+    // Clear state on date change
+    window._st = null;
+    window._ss = [];
+    document.getElementById('bk-seat-sec').classList.add('hidden');
+    updSum();
+
     if (window._sts) renderSTGroups(window._sts);
   }
 
   function renderSTGroups(sts) {
     const container = document.getElementById('st-groups');
-    // Group by screen type (screenName or default)
-    const groups = {};
-    sts.forEach(s => {
-      const key = s.screenName || s.screenType || 'Standard';
-      if (!groups[key]) groups[key] = [];
-      groups[key].push(s);
+    const thMap = {};
+    if(window._ths) window._ths.forEach(t => thMap[t.name] = t.location);
+
+    const thGroups = {};
+    
+    // Filter showtimes strictly by the selected date
+    const filteredSts = sts.filter(s => new Date(s.startTime).toDateString() === window._selDate);
+
+    filteredSts.forEach(s => {
+      const tName = s.theaterName || 'CinéMax Cinema';
+      const scName = s.screenName || s.screenType || 'Standard';
+      
+      if (!thGroups[tName]) thGroups[tName] = { location: thMap[tName] || 'Local Cinema', screens: {} };
+      if (!thGroups[tName].screens[scName]) thGroups[tName].screens[scName] = [];
+      
+      thGroups[tName].screens[scName].push(s);
     });
-    if (!Object.keys(groups).length) { container.innerHTML = '<p class="empty">No showtimes available for this date.</p>'; return; }
-    container.innerHTML = Object.entries(groups).map(([name, list]) => `
-      <div class="st-group">
-        <div class="st-group-label">${name}</div>
-        <div class="st-pills">
-          ${list.map(s => `
-            <div class="st-pill" id="st-${s.id}" onclick="pickST(${s.id},${s.price},'${s.startTime}','${s.screenName||'Standard'}')">
-              <div class="st-pill-time">${fmtT(s.startTime)}</div>
-              <div class="st-pill-lang">${s.language || 'English'} • ${fmtC(s.price)}</div>
-            </div>`).join('')}
+
+    if (!Object.keys(thGroups).length) { container.innerHTML = '<p class="empty">No shows available for this date.</p>'; return; }
+    
+    container.innerHTML = Object.entries(thGroups).map(([tName, tData]) => `
+      <div class="theater-card">
+        <div class="theater-header">
+          <div class="th-title">🎥 ${tName}</div>
+          <div class="th-loc">📍 ${tData.location}</div>
+        </div>
+        <div class="theater-body">
+          ${Object.entries(tData.screens).map(([scName, list]) => `
+            <div class="sc-group">
+              <div class="sc-label">${scName}</div>
+              <div class="st-pills">
+                ${list.map(s => `
+                  <div class="st-pill" id="st-${s.id}" onclick="pickST(${s.id},${s.price},'${s.startTime}','${scName}','${tName}')">
+                    <div class="st-pill-time">${fmtT(s.startTime)}</div>
+                    <div class="st-pill-lang">${s.language || 'English'} • ${fmtC(s.price)}</div>
+                  </div>`).join('')}
+              </div>
+            </div>
+          `).join('')}
         </div>
       </div>`).join('');
   }
 
-  function pickST(id, p, t, screen) {
-    window._st = { id, price: p, time: t, screen }; window._ss = [];
+  /* pickST: fetches real seat data from backend to build label→id map */
+  async function pickST(showtimeId, p, t, screen, theater) {
+    window._st = { id: showtimeId, price: p, time: t, screen, theater };
+    window._ss = [];
+    window._occupiedSeats = [];
+    window._seatMap = {};   // label → numeric DB id
+    window._seatStatusMap = {}; // label → 'AVAILABLE' | 'BOOKED'
+
     document.querySelectorAll('.st-pill').forEach(c => c.classList.remove('sel'));
-    document.getElementById(`st-${id}`)?.classList.add('sel');
+    document.getElementById(`st-${showtimeId}`)?.classList.add('sel');
+
+    // Show seat map immediately with loading state
     document.getElementById('bk-seat-sec').classList.remove('hidden');
-    buildMap(); updSum();
+    document.getElementById('seat-map').innerHTML = '<div class="loading"><div class="spin"></div> Loading seats…</div>';
+    updSum();
+
+    try {
+      const res = await API.getSeatsByShowtime(showtimeId);
+      const seats = res.data || res || [];
+
+      // Build maps from real API data
+      // Expected seat object: { id, seatNumber, status } e.g. { id:101, seatNumber:"A1", status:"AVAILABLE" }
+      seats.forEach(s => {
+        const label = s.seatNumber || s.label || s.seat;
+        window._seatMap[label] = s.id;
+        window._seatStatusMap[label] = s.status || 'AVAILABLE';
+        if (s.status === 'BOOKED' || s.status === 'RESERVED') {
+          window._occupiedSeats.push(label);
+        }
+      });
+
+      buildMap();
+    } catch (e) {
+      // If the seats API doesn't exist yet, fall back to generating sequential labels
+      // and warn the developer in the console
+      console.warn('Could not fetch seat layout from /api/seats/showtime/' + showtimeId + ':', e.message);
+      console.warn('Falling back to sequential seat IDs. This will fail if your backend validates seat IDs against its DB.');
+      window._seatMap = {};
+      let counter = 1;
+      ['A','B','C','D','E','F'].forEach(r => {
+        for (let i = 1; i <= 10; i++) { window._seatMap[`${r}${i}`] = counter++; }
+      });
+      buildMap();
+    }
   }
 
+  /* buildMap uses window._occupiedSeats (seat labels) and window._seatMap (label→numericId) */
   function buildMap() {
     const m = document.getElementById('seat-map'); m.innerHTML = '';
+    const occupied = window._occupiedSeats || [];
+    // _seatMap: { "A1": 1, "A2": 2, ... } — populated from API if available,
+    // otherwise we generate sequential IDs so the label→id mapping always exists.
+    if (!window._seatMap) {
+      window._seatMap = {};
+      let counter = 1;
+      ['A','B','C','D','E','F'].forEach(r => {
+        for (let i = 1; i <= 10; i++) { window._seatMap[`${r}${i}`] = counter++; }
+      });
+    }
     ['A','B','C','D','E','F'].forEach(r => {
       const row = document.createElement('div'); row.className = 'seat-row';
       const lbl = document.createElement('div'); lbl.className = 'rl'; lbl.textContent = r; row.appendChild(lbl);
       for (let i = 1; i <= 10; i++) {
         if (i === 4 || i === 8) { const a = document.createElement('div'); a.className = 'aisle'; row.appendChild(a); }
-        const sid = `${r}${i}`, occ = Math.random() < 0.18;
-        const s = document.createElement('div'); s.className = `seat ${occ?'occ':'av'}`; s.textContent = i;
+        const sid = `${r}${i}`;
+        const occ = occupied.includes(sid);
+        const s = document.createElement('div'); s.className = `seat ${occ ? 'occ' : 'av'}`; s.textContent = i;
         if (!occ) s.onclick = () => toggleSeat(sid, s);
         row.appendChild(s);
       }
@@ -870,56 +1167,90 @@
   }
 
   function toggleSeat(id, el) {
-    if (!A.isLoggedIn()) { toast('Please login to continue', 'error'); navigate('login'); return; }
-    if (el.classList.contains('sel')) { el.classList.remove('sel'); el.classList.add('av'); window._ss = window._ss.filter(x => x !== id); }
-    else { if (window._ss.length >= 8) { toast('Max 8 seats allowed', 'error'); return; } el.classList.remove('av'); el.classList.add('sel'); window._ss.push(id); }
+    if (!window._ss) window._ss = [];
+
+    if (el.classList.contains('sel')) {
+      el.classList.remove('sel');
+      el.classList.add('av');
+      window._ss = window._ss.filter(seat => seat !== id);
+    } else {
+      if (window._ss.length >= 8) { toast('Max 8 seats allowed', 'error'); return; }
+      el.classList.remove('av');
+      el.classList.add('sel');
+      if (!window._ss.includes(id)) window._ss.push(id);
+    }
     updSum();
   }
 
+  /* ─── FIX 4: updSum — safe poster injection that never breaks the summary ─── */
   function updSum() {
     const m = window._bm, st = window._st, ss = window._ss || [];
+
     document.getElementById('sum-title').textContent = m?.title || '—';
-    document.getElementById('sum-sub').textContent = m ? `${m.genre || ''} • ${m.language || ''}` : '—';
-    document.getElementById('sum-dt').textContent = st ? `${fmtD(st.time)} @ ${fmtT(st.time)}` : '—';
-    document.getElementById('sum-screen').textContent = st?.screen || '—';
-    document.getElementById('sum-seats').textContent = ss.length ? ss.map(s => `<span class="seat-tag">${s}</span>`).join('') : '—';
+    document.getElementById('sum-sub').textContent = m
+      ? [m.genre, m.language].filter(Boolean).join(' • ') || 'Movie'
+      : 'Select a showtime to begin';
+    document.getElementById('sum-dt').textContent = st ? `${fmtD(st.time)} @ ${fmtT(st.time)}` : (window._selDate ? window._selDate : '—');
+    document.getElementById('sum-screen').innerHTML = st?.theater ? `${st.theater} <span style="opacity:0.6">| ${st.screen}</span>` : '—';
+    document.getElementById('sum-seats').innerHTML = ss.length ? ss.map(s => `<span class="seat-tag">${s}</span>`).join('') : '—';
     document.getElementById('sum-tickets').textContent = st ? `${ss.length} × ${fmtC(st.price)}` : '—';
+
     const total = ss.length * (st?.price || 0);
     document.getElementById('sum-total').textContent = fmtC(total);
     document.getElementById('pay-btn-open').disabled = !ss.length;
-    // Update poster if available
+
+    // Safe poster swap — works whether called once or many times
     if (m?.posterUrl) {
       const si = document.getElementById('sum-movie-info');
-      const img = si.querySelector('img') || document.createElement('img');
-      img.src = m.posterUrl; img.className = 'bk-sum-poster'; img.onerror = () => img.style.display='none';
-      si.querySelector('div:first-child')?.replaceWith(img);
+      let img = si.querySelector('img.bk-sum-poster');
+      if (!img) {
+        img = document.createElement('img');
+        img.className = 'bk-sum-poster';
+        img.onerror = () => { img.style.display = 'none'; };
+        // Replace the placeholder div with the image element
+        const placeholder = document.getElementById('sum-poster-placeholder');
+        if (placeholder) {
+          placeholder.replaceWith(img);
+        } else {
+          si.prepend(img);
+        }
+      }
+      img.src = m.posterUrl;
+      img.style.display = '';
     }
   }
 
   /* ───── PAYMENT PAGE ───── */
-  let _selPayMethod = 'CARD';
-  function selPay(el, method) {
-    document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('sel'));
-    el.classList.add('sel'); _selPayMethod = method;
-    document.getElementById('card-section').style.display = method === 'CARD' ? '' : 'none';
+  /* ───── PAYMENT PAGE ───── */
+  function validatePaymentForm() {
+    const cb = document.getElementById('terms-cb').checked;
+    const num = document.getElementById('card-number').value.replace(/ /g, '');
+    const m = document.getElementById('card-month').value;
+    const y = document.getElementById('card-year').value;
+    const cvn = document.getElementById('card-cvn').value;
+    
+    const isValid = cb && num.length >= 15 && m && y && cvn.length >= 3;
+    document.getElementById('pay-final-btn').disabled = !isValid;
   }
-  function checkTerms() {
-    document.getElementById('pay-final-btn').disabled = !document.getElementById('terms-cb').checked;
-  }
+
   function renderPaySummary() {
     const m = window._bm, st = window._st, ss = window._ss || [];
     const sub = ss.length * (st?.price || 0);
     const tax = Math.round(sub * TAX_RATE);
     const total = sub + tax;
     document.getElementById('pay-sum-title').textContent = m?.title || '—';
-    document.getElementById('pay-sum-sub').textContent = m ? `${m.genre||''} • ${m.language||''} • ${fmtD(st?.time)}` : '—';
+    document.getElementById('pay-sum-sub').textContent = m ? [m.genre, m.language].filter(Boolean).join(' • ') + (st ? ` • ${fmtD(st.time)}` : '') : '—';
     document.getElementById('pay-sum-dt').textContent = st ? `${fmtD(st.time)}, ${fmtT(st.time)}` : '—';
-    document.getElementById('pay-sum-seats').textContent = ss.join(', ') || '—';
+    document.getElementById('pay-sum-seats').textContent = ss.length ? [...ss].sort().join(', ') : '—';
     document.getElementById('pay-sum-tickets').textContent = `${ss.length} × ${fmtC(st?.price || 0)}`;
     document.getElementById('pay-sum-sub2').textContent = fmtC(sub);
     document.getElementById('pay-sum-tax').textContent = fmtC(tax);
     document.getElementById('pay-sum-total').textContent = fmtC(total);
-    // poster
+    
+    // Set the amount in the payment button directly
+    const btnAmt = document.getElementById('pay-btn-amt');
+    if(btnAmt) btnAmt.textContent = fmtC(total);
+    
     if (m?.posterUrl) {
       const img = document.getElementById('pay-sum-poster');
       const icon = document.getElementById('pay-sum-icon');
@@ -934,13 +1265,90 @@
       const u = A.getUser();
       const ss = window._ss, st = window._st;
       const sub = ss.length * st.price, tax = Math.round(sub * TAX_RATE), total = sub + tax;
-      const b = await API.createBooking({ userId: u?.id || 1, showtimeId: st.id, seatIds: ss });
-      await API.processPayment({ bookingId: b.id || b.data?.id, paymentMethod: _selPayMethod, amount: total });
-      toast('Booking confirmed! Enjoy the movie 🍿'); navigate('mybookings');
+
+      // Convert seat labels ("A1", "B3") → numeric IDs the backend expects
+      const seatMap = window._seatMap || {};
+      const numericSeatIds = ss.map(label => {
+        const id = seatMap[label];
+        if (id === undefined) throw new Error(`No numeric ID found for seat ${label}. Check your seat layout API.`);
+        return id;
+      });
+
+      const b = await API.createBooking({ userId: u?.id || 1, showtimeId: st.id, seatIds: numericSeatIds });
+      await API.processPayment({ bookingId: b.id || b.data?.id, paymentMethod: 'CARD', amount: total });
+      toast('Booking confirmed! Enjoy the movie 🍿');
+      
+      const realBookingId = b.data?.id || b.id;
+      if(realBookingId) localStorage.setItem('pendingFeedbackBookingId', realBookingId);
+      
+      navigate('mybookings');
     } catch (e) {
       const err = document.getElementById('pay-err'); err.textContent = e.message; err.classList.remove('hidden');
       toast(e.message, 'error');
     } finally { btn.disabled = false; btn.textContent = 'Confirm Payment'; }
+  }
+
+  /* ───── FEEDBACK ───── */
+  let _fbBooking = null;
+  let _fbRating = 0;
+  
+  function openFeedbackModal(b) {
+    _fbBooking = b;
+    _fbRating = 0;
+    
+    document.getElementById('modal-box').innerHTML = document.getElementById('fb-modal-tpl').innerHTML;
+    
+    document.getElementById('fb-b-id').textContent = '#' + b.id;
+    document.getElementById('fb-b-movie').textContent = b.movieTitle || 'Movie Ticket';
+    document.getElementById('fb-b-seats').textContent = b.seatNumbers?.join(', ') || 'N/A';
+    document.querySelector('.fb-text').value = '';
+    document.getElementById('modal-bg').classList.remove('hidden');
+    document.getElementById('modal-box').classList.remove('hidden');
+  }
+  
+  function fbRate(r) {
+    _fbRating = r;
+    const stars = document.getElementById('modal-box').querySelectorAll('.fb-star');
+    stars.forEach((s, i) => {
+      // Because we use row-reverse in CSS, index logic is reversed visually.
+      // Easiest way: remove active from all, then add to the clicked and its following siblings (via CSS) or manually
+      s.classList.toggle('active', parseInt(s.dataset.val) <= r);
+    });
+  }
+  
+  function fbToggleTag(el) {
+    el.classList.toggle('active');
+    const txt = document.getElementById('modal-box').querySelector('.fb-text');
+    const tag = el.textContent;
+    if(el.classList.contains('active')) {
+      txt.value = txt.value ? txt.value + ' | ' + tag : tag;
+    } else {
+      txt.value = txt.value.replace(new RegExp(' ?\\\\| ?' + tag, 'g'), '').replace(new RegExp('^' + tag + ' ?\\\\| ?'), '').replace(tag, '').trim();
+    }
+  }
+  
+  function closeFeedbackModal() {
+    closeModal();
+    _fbBooking = null;
+  }
+  
+  async function submitFeedback() {
+    if(!_fbRating) { toast('Please select a star rating', 'error'); return; }
+    try {
+      const u = A.getUser();
+      const text = document.getElementById('modal-box').querySelector('.fb-text').value;
+      await API.postFeedback({
+        userId: u.id || 1,
+        movieId: _fbBooking.movieId,
+        bookingId: _fbBooking.id,
+        rating: _fbRating,
+        comment: text || 'No comment'
+      });
+      toast('Thank you for your feedback! ⭐');
+      closeFeedbackModal();
+    } catch(e) {
+      toast(e.message, 'error');
+    }
   }
 
   async function cancelBk(id) {
@@ -960,11 +1368,26 @@
   }
   const ADM_INIT = {
     dash: async () => {
-      const [mv,bk,py,th] = await Promise.allSettled([API.getMovies(),API.getAllBookings(),API.getAllPayments(),API.getTheaters()]);
-      const dat = [mv,bk,py,th].map(r => r.value?.data || r.value || []);
-      document.getElementById('adm-stats').innerHTML = [['🎬','Movies',dat[0].length],['🎟️','Bookings',dat[1].length],['💰','Revenue',fmtC(dat[2].reduce((a,c)=>a+c.amount,0))],['🏛️','Theaters',dat[3].length]].map(([ic,l,v])=>
-        `<div class="stat-card"><div style="font-size:1.5rem">${ic}</div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
-      document.getElementById('adm-recent').innerHTML = dat[1].slice(0,5).map(b=>`<tr><td>#${b.id}</td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${fmtC(b.totalAmount)}</td><td><span class="status status-${b.status}">${b.status}</span></td></tr>`).join('');
+      const [mv,bk,py,th,fb] = await Promise.allSettled([API.getMovies(),API.getAllBookings(),API.getAllPayments(),API.getTheaters(),API.getAllFeedback()]);
+      const dat = [mv,bk,py,th,fb].map(r => r.value?.data || r.value || []);
+      
+      const bookings = dat[1];
+      const totalBookings = bookings.length;
+      const confirmedBookings = bookings.filter(b => b.status === "CONFIRMED").length;
+      const cancelledBookings = bookings.filter(b => b.status === "CANCELLED").length;
+      const revenue = bookings.filter(b => b.status === "CONFIRMED").reduce((sum, b) => sum + Number(b.totalAmount || 0), 0);
+
+      document.getElementById('adm-stats').innerHTML = [
+        ['🎬','Movies',dat[0].length],
+        ['🎟️','Total Bookings',totalBookings],
+        ['✅','Confirmed',confirmedBookings],
+        ['❌','Cancelled',cancelledBookings],
+        ['💰','Revenue',fmtC(revenue)],
+        ['🏛️','Theaters',dat[3].length],
+        ['⭐','User Reviews',dat[4].length]
+      ].map(([ic,l,v])=>`<div class="stat-card"><div style="font-size:1.5rem">${ic}</div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
+      
+      document.getElementById('adm-recent').innerHTML = [...bookings].sort((a,b)=>b.id-a.id).slice(0,5).map(b=>`<tr><td>#${b.id}</td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${fmtC(b.totalAmount)}</td><td><span class="status status-${b.status}">${b.status}</span></td></tr>`).join('');
     },
     mov: async () => {
       const d = await API.getMovies(); const mv = d.data || d;
@@ -976,18 +1399,68 @@
     },
     bk: async () => {
       const d = await API.getAllBookings(); const bks = d.data || d;
-      document.getElementById('tbl-bk').innerHTML = bks.map(b=>`<tr><td class="b">#${b.id}</td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${fmtC(b.totalAmount)}</td><td><span class="status status-${b.status}">${b.status}</span></td><td>${b.status!=='CANCELLED'?`<button class="btn btn-ghost btn-sm" onclick="cancelBkAdm(${b.id})">Cancel</button>`:''}</td></tr>`).join('') || '<tr><td colspan="6" class="empty">No bookings found.</td></tr>';
-    },
+      console.log("Admin bookings table:", bks);
+      document.getElementById('tbl-bk').innerHTML = bks.map(b=>`
+        <tr>
+         <td class="b">#${b.id}</td>
+         <td>${b.userName || '—'}</td>
+         <td>${b.movieTitle || '—'}</td>
+         <td>${b.theaterName || 'CinéMax Colombo'}</td>
+         <td>${b.showtime ? `${fmtD(b.showtime)} ${fmtT(b.showtime)}` : '—'}</td>
+         <td>${(b.seatNumbers || b.seatIds || []).join(', ') || '—'}</td>
+         <td>${fmtC(b.totalAmount)}</td>
+         <td><span class="status status-${b.status}">${b.status}</span></td>
+         <td>${b.status !== 'CANCELLED' ? `<button class="btn btn-ghost btn-sm" onclick="cancelBkAdm(${b.id})">Cancel</button>` : ''}</td>
+      </tr>
+`).join('') || '<tr><td colspan="9" class="empty">No bookings found.</td></tr>';    },
     th: async () => {
       const d = await API.getTheaters(); const ths = d.data || d;
-      document.getElementById('tbl-th').innerHTML = ths.map(t=>`<tr><td class="b">${t.name}</td><td>${t.location}</td><td>${t.totalScreens}</td><td><button class="btn btn-ghost btn-sm" onclick="editTh(${t.id})">Edit</button> <button class="btn btn-ghost btn-sm" onclick="delTh(${t.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="4" class="empty">No theaters found.</td></tr>';
+      document.getElementById('tbl-th').innerHTML = ths.map(t=>`<tr><td class="b">${t.name}</td><td>${t.location}</td><td>${t.totalScreens || 0}</td><td><button class="btn btn-ghost btn-sm" onclick="editTh(${t.id})">Edit</button> <button class="btn btn-ghost btn-sm" onclick="delTh(${t.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="4" class="empty">No theaters found.</td></tr>';
+    },
+    fb: async () => {
+      const d = await API.getAllFeedback(); const fbs = d.data || d;
+      const getStars = r => '⭐'.repeat(r);
+      document.getElementById('tbl-fb').innerHTML = fbs.sort((a,b)=>b.id-a.id).map(f=>`
+        <tr>
+          <td class="b">#${f.id}</td>
+          <td>${f.userName || '—'}</td>
+          <td>${f.movieTitle || '—'}</td>
+          <td>${f.bookingId || '—'}</td>
+          <td style="color:#f1c40f">${getStars(f.rating)}</td>
+          <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${f.comment || '—'}</td>
+          <td>${fmtD(f.createdAt || new Date())}</td>
+          <td><button class="btn btn-ghost btn-sm" onclick="viewFb(${f.id})">View</button> <button class="btn btn-ghost btn-sm" onclick="delFb(${f.id})">Delete</button></td>
+        </tr>
+      `).join('') || '<tr><td colspan="8" class="empty">No user reviews found.</td></tr>';
     }
   };
+
+  window._allFbs = []; // To store for view modal
 
   async function delMv(id) { if(confirm('Delete movie?')) { try { await API.delMovie(id); toast('Movie deleted'); ADM_INIT.mov(); } catch(e) { toast(e.message,'error'); } } }
   async function delSt(id) { if(confirm('Delete showtime?')) { try { await API.delShowtime(id); toast('Showtime deleted'); ADM_INIT.st(); } catch(e) { toast(e.message,'error'); } } }
   async function cancelBkAdm(id) { if(confirm('Cancel booking?')) { try { await API.cancelBooking(id); toast('Booking cancelled'); ADM_INIT.bk(); } catch(e) { toast(e.message,'error'); } } }
   async function delTh(id) { if(confirm('Delete theater?')) { try { await API.delTheater(id); toast('Theater deleted'); ADM_INIT.th(); } catch(e) { toast(e.message,'error'); } } }
+  async function delFb(id) { if(confirm('Delete this user review?')) { try { await API.delFeedback(id); toast('Review deleted'); ADM_INIT.fb(); } catch(e) { toast(e.message,'error'); } } }
+
+  async function viewFb(id) {
+    try {
+      const d = await API.getAllFeedback(); const fbs = d.data || d;
+      const f = fbs.find(x => x.id === id);
+      if(!f) return;
+      showModal(`<h3>Review #${f.id}</h3><br>
+        <div style="margin-bottom:1rem"><b>User:</b> ${f.userName}</div>
+        <div style="margin-bottom:1rem"><b>Movie:</b> ${f.movieTitle}</div>
+        <div style="margin-bottom:1rem"><b>Booking ID:</b> #${f.bookingId || '—'}</div>
+        <div style="margin-bottom:1rem"><b>Rating:</b> <span style="color:#f1c40f">${'⭐'.repeat(f.rating)}</span></div>
+        <div style="margin-bottom:1rem"><b>Date:</b> ${fmtD(f.createdAt)}</div>
+        <div style="background:var(--bg-card);padding:1rem;border-radius:12px;border:1px solid var(--border);margin-bottom:1rem;">
+          <p style="white-space:pre-wrap;color:var(--text);">${f.comment}</p>
+        </div>
+        <button class="btn btn-purple btn-block" onclick="closeModal()">Close</button>
+      `);
+    } catch(e) { toast(e.message, 'error'); }
+  }
 
   function openMovModal(m=null) {
     showModal(`<h3>${m?'Edit':'Add New'} Movie</h3><br>
@@ -1004,17 +1477,76 @@
   async function subMov(e,id) { e.preventDefault(); const b=Object.fromEntries(new FormData(e.target)); try { id?await API.putMovie(id,b):await API.postMovie(b); toast(id?'Movie updated':'Movie added'); closeModal(); ADM_INIT.mov(); } catch(e){toast(e.message,'error');} }
   async function editMov(id) { try { const d=await API.getMovie(id); openMovModal(d.data||d); } catch(e){toast(e.message,'error');} }
 
-  function openStModal(s=null) {
-    showModal(`<h3>${s?'Edit':'Add'} Showtime</h3><br>
+  async function openStModal(s=null) {
+    let mvOpts = '<option value="">Loading...</option>';
+    let thOpts = '<option value="">Loading...</option>';
+    let scOpts = '<option value="">Loading...</option>';
+    
+    try {
+      const [mRes, tRes, sRes] = await Promise.all([API.getMovies(), API.getTheaters(), API.getScreens()]);
+      const movies = mRes.data || mRes || [];
+      const theaters = tRes.data || tRes || [];
+      const screens = sRes.data || sRes || [];
+      window._stScreens = screens;
+      
+      const preSelTh = s ? screens.find(x=>x.id==s.screenId)?.theaterId : null;
+      
+      mvOpts = '<option value="">Select Movie...</option>' + movies.map(m => `<option value="${m.id}" ${s && s.movieId==m.id?'selected':''}>${m.title} - ID ${m.id}</option>`).join('');
+      thOpts = '<option value="">Select Theater...</option>' + theaters.map(th => `<option value="${th.id}" ${preSelTh==th.id?'selected':''}>${th.name}</option>`).join('');
+      scOpts = preSelTh ? '<option value="">Select Screen...</option>' + screens.filter(sc => sc.theaterId == preSelTh).map(sc => `<option value="${sc.id}" ${s && s.screenId==sc.id?'selected':''}>${sc.name || 'Screen ' + sc.id}</option>`).join('') : '<option value="">Select Theater first...</option>';
+
+    } catch(e) {
+      console.error(e);
+    }
+
+    showModal(`<h3>${s?'Edit':'Add New'} Showtime</h3><br>
       <form onsubmit="subSt(event,${s?s.id:'null'})">
-        <div class="form-row"><div class="form-g"><label>Movie ID</label><input name="movieId" type="number" value="${s?s.movieId:''}" required></div><div class="form-g"><label>Screen ID</label><input name="screenId" type="number" value="${s?s.screenId:''}" required></div></div>
-        <div class="form-row"><div class="form-g"><label>Start Time</label><input name="startTime" type="datetime-local" value="${s?s.startTime.substring(0,16):''}" required></div><div class="form-g"><label>End Time</label><input name="endTime" type="datetime-local" value="${s?s.endTime?.substring(0,16):''}" required></div></div>
-        <div class="form-row"><div class="form-g"><label>Price (LKR)</label><input name="price" type="number" step="0.01" value="${s?s.price:''}" required></div><div class="form-g"><label>Total Seats</label><input name="availableSeats" type="number" value="${s?s.availableSeats:60}" required></div></div>
+        <div class="form-row">
+          <div class="form-g">
+            <label>Movie</label>
+            <select name="movieId" required>${mvOpts}</select>
+          </div>
+          <div class="form-g">
+            <label>Theater</label>
+            <select id="stThSelect" onchange="window.updateStScreens(this.value)" required>${thOpts}</select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-g">
+            <label>Screen</label>
+            <select name="screenId" id="stScSelect" required>${scOpts}</select>
+          </div>
+          <div class="form-g">
+            <label>Start Time</label>
+            <input name="startTime" type="datetime-local" value="${s?s.startTime.substring(0,16):''}" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-g">
+            <label>End Time</label>
+            <input name="endTime" type="datetime-local" value="${s?s.endTime?.substring(0,16):''}" required>
+          </div>
+          <div class="form-g">
+            <label>Price (LKR)</label>
+            <input name="price" type="number" step="0.01" value="${s?s.price:''}" required>
+          </div>
+        </div>
+        <div class="form-g">
+          <label>Total Seats</label>
+          <input name="availableSeats" type="number" value="${s?s.availableSeats:60}" required>
+        </div>
         <button type="submit" class="btn btn-purple btn-block">Save Showtime</button>
       </form>`);
   }
   async function subSt(e,id) { e.preventDefault(); const b=Object.fromEntries(new FormData(e.target)); try { id?await API.putShowtime(id,b):await API.postShowtime(b); toast(id?'Showtime updated':'Showtime added'); closeModal(); ADM_INIT.st(); } catch(e){toast(e.message,'error');} }
   async function editSt(id) { try { const d=await API.getShowtime(id); openStModal(d.data||d); } catch(e){toast(e.message,'error');} }
+
+  window.updateStScreens = function(thId) {
+    const scSelect = document.getElementById('stScSelect');
+    if(!thId) { scSelect.innerHTML = '<option value="">Select Theater first...</option>'; return; }
+    const filtered = window._stScreens.filter(sc => sc.theaterId == thId);
+    scSelect.innerHTML = '<option value="">Select Screen...</option>' + filtered.map(sc => `<option value="${sc.id}">${sc.name || 'Screen ' + sc.id}</option>`).join('');
+  };
 
   function openThModal(t=null) {
     showModal(`<h3>${t?'Edit':'Add New'} Theater</h3><br>

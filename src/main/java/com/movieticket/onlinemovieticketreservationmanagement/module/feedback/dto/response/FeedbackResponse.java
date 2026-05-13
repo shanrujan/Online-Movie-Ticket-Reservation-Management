@@ -13,6 +13,7 @@ public class FeedbackResponse {
     private String userName;
     private Long movieId;
     private String movieTitle;
+    private Long bookingId;
     private int rating;
     private String comment;
     private LocalDateTime createdAt;

@@ -1,10 +1,13 @@
 package com.movieticket.onlinemovieticketreservationmanagement.module.user.controller;
 
 import com.movieticket.onlinemovieticketreservationmanagement.module.user.dto.request.LoginRequest;
+import com.movieticket.onlinemovieticketreservationmanagement.module.user.dto.request.RegisterRequest;
 import com.movieticket.onlinemovieticketreservationmanagement.module.user.dto.response.AuthResponse;
 import com.movieticket.onlinemovieticketreservationmanagement.module.user.service.AuthService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-
-
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(
+            @Valid @RequestBody RegisterRequest request) {
+
+        return ResponseEntity.ok(authService.register(request));
     }
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/feedbacks")
+@RequestMapping("/api/feedback")
 @RequiredArgsConstructor
 public class FeedbackController {
 
@@ -24,6 +24,13 @@ public class FeedbackController {
         return ResponseEntity.status(201)
                 .body(ApiResponse.success("Feedback submitted successfully",
                         feedbackService.addFeedback(request)));
+    }
+
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllFeedback() {
+        return ResponseEntity.ok(
+                ApiResponse.success(feedbackService.getAllFeedback()));
     }
 
     @GetMapping("/movie/{movieId}")

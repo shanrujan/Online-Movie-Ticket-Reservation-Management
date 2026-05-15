@@ -31,6 +31,9 @@ public class Theater {
 
     private String phone;
 
+    private Integer totalScreens;
+
+
     @OneToMany(mappedBy = "theater",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)

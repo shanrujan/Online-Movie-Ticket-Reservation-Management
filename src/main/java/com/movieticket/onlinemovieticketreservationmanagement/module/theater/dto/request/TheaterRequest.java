@@ -16,4 +16,7 @@ public class TheaterRequest {
     private String city;
 
     private String phone;
+    private Integer totalScreens;
+
+
 }

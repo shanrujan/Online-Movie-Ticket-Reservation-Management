@@ -9,6 +9,8 @@ import com.movieticket.onlinemovieticketreservationmanagement.module.feedback.mo
 import com.movieticket.onlinemovieticketreservationmanagement.module.feedback.repository.FeedbackRepository;
 import com.movieticket.onlinemovieticketreservationmanagement.module.movie.model.Movie;
 import com.movieticket.onlinemovieticketreservationmanagement.module.movie.repository.MovieRepository;
+import com.movieticket.onlinemovieticketreservationmanagement.module.booking.model.Booking;
+import com.movieticket.onlinemovieticketreservationmanagement.module.booking.repository.BookingRepository;
 import com.movieticket.onlinemovieticketreservationmanagement.module.user.model.User;
 import com.movieticket.onlinemovieticketreservationmanagement.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +27,14 @@ public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
+    private final BookingRepository bookingRepository;
 
     // Add feedback
     public FeedbackResponse addFeedback(FeedbackRequest request) {
-        // Check if user already gave feedback for this movie
-        if (feedbackRepository.existsByUserIdAndMovieId(
-                request.getUserId(), request.getMovieId())) {
+        // Check if feedback already exists for this booking
+        if (feedbackRepository.existsByBookingId(request.getBookingId())) {
             throw new BadRequestException(
-                    "You have already submitted feedback for this movie");
+                    "You have already submitted feedback for this booking");
         }
 
         User user = userRepository.findById(request.getUserId())
@@ -40,16 +42,28 @@ public class FeedbackService {
 
         Movie movie = movieRepository.findById(request.getMovieId())
                 .orElseThrow(() -> new ResourceNotFoundException("Movie not found"));
+                
+        Booking booking = bookingRepository.findById(request.getBookingId())
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
         Feedback feedback = new Feedback();
         feedback.setUser(user);
         feedback.setMovie(movie);
+        feedback.setBooking(booking);
         feedback.setRating(request.getRating());
         feedback.setComment(request.getComment());
         feedback.setCreatedAt(LocalDateTime.now());
 
         Feedback saved = feedbackRepository.save(feedback);
         return mapToResponse(saved);
+    }
+
+    // Get all feedback
+    public List<FeedbackResponse> getAllFeedback() {
+        return feedbackRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     // Get all feedback for a movie
@@ -91,8 +105,10 @@ public class FeedbackService {
         return new FeedbackResponse(
                 feedback.getId(),
                 feedback.getUser().getId(),
-                feedback.getUser().getName(),                feedback.getMovie().getId(),
+                feedback.getUser().getName(),
+                feedback.getMovie().getId(),
                 feedback.getMovie().getTitle(),
+                feedback.getBooking() != null ? feedback.getBooking().getId() : null,
                 feedback.getRating(),
                 feedback.getComment(),
                 feedback.getCreatedAt()

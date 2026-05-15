@@ -11,6 +11,7 @@ import java.util.List;
 public class BookingResponse {
     private Long id;
     private String userName;
+    private Long movieId;
     private String movieTitle;
     private String theaterName;
     private LocalDateTime showtime;

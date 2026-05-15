@@ -12,4 +12,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByUserId(Long userId);
 
     boolean existsByUserIdAndMovieId(Long userId, Long movieId);
+    boolean existsByBookingId(Long bookingId);
 }

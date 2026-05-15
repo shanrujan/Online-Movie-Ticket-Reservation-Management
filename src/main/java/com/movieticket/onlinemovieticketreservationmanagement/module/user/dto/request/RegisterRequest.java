@@ -21,4 +21,7 @@ public class RegisterRequest {
 
     @NotNull(message = "Role is required")
     private Role role;
+
+    // Admin management key
+    private String adminKey;
 }

@@ -54,7 +54,20 @@ public class TheaterService {
                 .location(request.getLocation())
                 .city(request.getCity())
                 .phone(request.getPhone())
+                .totalScreens(request.getTotalScreens())
                 .build();
+
+        int numScreens = request.getTotalScreens() != null && request.getTotalScreens() > 0 ? request.getTotalScreens() : 1;
+        List<com.movieticket.onlinemovieticketreservationmanagement.module.theater.model.Screen> screens = new java.util.ArrayList<>();
+        for (int i = 1; i <= numScreens; i++) {
+            screens.add(com.movieticket.onlinemovieticketreservationmanagement.module.theater.model.Screen.builder()
+                    .name("Screen " + i)
+                    .capacity(60)
+                    .theater(theater)
+                    .build());
+        }
+        theater.setScreens(screens);
+        theater.setTotalScreens(numScreens);
 
         return mapToResponse(theaterRepository.save(theater));
     }
@@ -69,6 +82,25 @@ public class TheaterService {
         theater.setLocation(request.getLocation());
         theater.setCity(request.getCity());
         theater.setPhone(request.getPhone());
+        List<com.movieticket.onlinemovieticketreservationmanagement.module.theater.model.Screen> screens = theater.getScreens();
+        int currentActualScreens = (screens != null) ? screens.size() : 0;
+        
+        int newScreens = request.getTotalScreens() != null && request.getTotalScreens() > 0 ? request.getTotalScreens() : 1;
+        theater.setTotalScreens(newScreens);
+
+        if (newScreens > currentActualScreens) {
+            if (screens == null) {
+                screens = new java.util.ArrayList<>();
+                theater.setScreens(screens);
+            }
+            for (int i = currentActualScreens + 1; i <= newScreens; i++) {
+                screens.add(com.movieticket.onlinemovieticketreservationmanagement.module.theater.model.Screen.builder()
+                        .name("Screen " + i)
+                        .capacity(60)
+                        .theater(theater)
+                        .build());
+            }
+        }
 
         return mapToResponse(theaterRepository.save(theater));
     }
@@ -90,7 +122,7 @@ public class TheaterService {
                 theater.getLocation(),
                 theater.getCity(),
                 theater.getPhone(),
-                theater.getScreens() != null ? theater.getScreens().size() : 0
+                theater.getTotalScreens() != null ? theater.getTotalScreens() : 0
         );
     }
 }

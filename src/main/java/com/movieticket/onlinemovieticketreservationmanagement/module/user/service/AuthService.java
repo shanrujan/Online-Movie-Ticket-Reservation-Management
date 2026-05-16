@@ -30,7 +30,7 @@ public class AuthService {
                 .message("Login successful")
                 .token(token)
                 .userId(user.getId())
-                .name(user.getName())
+                .name(user.getFullName())
                 .role(user.getRole())
                 .build();
     }

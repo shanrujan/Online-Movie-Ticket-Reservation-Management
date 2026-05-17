@@ -41,7 +41,7 @@ public class AuthService {
 
         // Create user
         User user = User.builder()
-                .name(request.getName())
+                .fullName(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
@@ -55,7 +55,7 @@ public class AuthService {
                 .message("Registration successful")
                 .token(token)
                 .userId(user.getId())
-                .name(user.getName())
+                .name(user.getFullName())
                 .role(user.getRole())
                 .build();
     }
@@ -76,7 +76,7 @@ public class AuthService {
                 .message("Login successful")
                 .token(token)
                 .userId(user.getId())
-                .name(user.getName())
+                .name(user.getFullName())
                 .role(user.getRole())
                 .build();
     }

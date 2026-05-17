@@ -922,30 +922,38 @@
     navigate('booking', { id: mid });
   }
 
-  /* ───── MOVIES PAGE ───── */
-  function mCard(m) {
-    return `<div class="movie-card" onclick="navigate('booking',{id:${m.id}})">
-      <div class="poster">
-        <img src="${m.posterUrl}" onerror="this.src='https://placehold.co/400x600/1a1d28/7c3aed?text=🎬'">
-        <div class="poster-overlay"><button class="btn btn-purple btn-sm">Book Now</button></div>
-        ${m.status === 'COMING_SOON' ? '<span class="badge badge-soon">Coming Soon</span>' : '<span class="badge badge-new">Now Showing</span>'}
-      </div>
-      <div class="card-info"><div class="card-title">${m.title}</div><div class="card-meta">${m.genre || ''} • ${m.language || ''}</div></div>
-    </div>`;
-  }
-  function renderMovies(mv) { document.getElementById('mov-grid').innerHTML = mv.length ? mv.map(m => mCard(m)).join('') : '<p class="empty">No movies found.</p>'; }
-  function renderGenres(mv) {
-    const gs = ['All', ...new Set(mv.map(m => m.genre).filter(Boolean))];
-    document.getElementById('genre-chips').innerHTML = gs.map(g => `<span class="chip ${g==='All'?'active':''}" onclick="filterGenre('${g}',this)">${g}</span>`).join('');
-  }
-  function filterGenre(g, el) {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active');
-    renderMovies(g === 'All' ? window._mv : window._mv.filter(m => m.genre === g));
-  }
-  function filterMov() {
-    const q = document.getElementById('mov-q').value.toLowerCase();
-    renderMovies(window._mv.filter(m => m.title.toLowerCase().includes(q) || (m.genre || '').toLowerCase().includes(q)));
-  }
+    const BASE_URL = 'http://localhost:8085';
+
+    /* ───── AUTH ───── */
+    const A = {
+     getToken: () => localStorage.getItem('jwt'),
+     getUser: () => JSON.parse(localStorage.getItem('user') || 'null'),
+     isLoggedIn: () => !!localStorage.getItem('jwt'),
+     save: (t, u) => { localStorage.setItem('jwt', t); localStorage.setItem('user', JSON.stringify(u)); },
+     logout: () => { localStorage.clear(); navigate('login'); },
+     isAdmin: () => { const u = A.getUser(); return u && (u.role === 'ADMIN' || u.role === 'ROLE_ADMIN'); }
+    };
+
+/* ───── API ───── */
+<!--async function req(p, o = {}) {-->
+
+<!-- const h = { 'Content-Type': 'application/json', ...o.headers };-->
+<!-- const t = A.getToken(); if (t) h.Authorization = `Bearer ${t}`;-->
+<!-- try {-->
+<!--   const r = await fetch(p, { ...o, headers: h });-->
+<!--   const tx = await r.text();-->
+<!--   let d; try { d = JSON.parse(tx); } catch { d = { message: tx }; }-->
+<!--   if (!r.ok) { const m = d.message || d.error || (d.errors ? d.errors.map(x => x.defaultMessage).join(', ') : null) || 'Server Error'; throw new Error(m); }-->
+<!--   return d;-->
+<!-- } catch (e) {-->
+<!--   if (e.message.includes('Failed to fetch')) throw new Error('API server unreachable. Make sure the backend is running on port 8085.');-->
+<!--   throw e;-->
+<!-- }-->
+<!--}-->
+async function req(p, o = {}) {
+    const h = { 'Content-Type': 'application/json', ...o.headers };
+    const t = A.getToken();
+    if (t) h.Authorization = `Bearer ${t}`;
 
   /* ───── AUTH ───── */
   async function doLogin(e) {
@@ -1561,6 +1569,468 @@
   async function editTh(id) { try { const d=await API.getTheater(id); openThModal(d.data||d); } catch(e){toast(e.message,'error');} }
 
   navigate('home');
+    try {
+      // 2. Attach BASE_URL to the path 'p' so it forces port 8085
+      const r = await fetch(BASE_URL + p, { ...o, headers: h });
+
+      const tx = await r.text();
+      let d;
+      try { d = JSON.parse(tx); } catch { d = { message: tx }; }
+
+      if (!r.ok) {
+        const m = d.message || d.error || (d.errors ? d.errors.map(x => x.defaultMessage).join(', ') : null) || 'Server Error';
+        throw new Error(m);
+      }
+      return d;
+    } catch (e) {
+      if (e.message.includes('Failed to fetch')) throw new Error('API server unreachable. Make sure the backend is running on port 8085.');
+      throw e;
+    }
+  }
+const API = {
+ login: b => req('/api/auth/login', { method: 'POST', body: JSON.stringify(b) }),
+ register: b => req('/api/users/register', { method: 'POST', body: JSON.stringify(b) }),
+ getMovies: () => req('/api/movies'),
+ getMovie: id => req(`/api/movies/${id}`),
+ postMovie: b => req('/api/movies', { method: 'POST', body: JSON.stringify(b) }),
+ putMovie: (id, b) => req(`/api/movies/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
+ delMovie: id => req(`/api/movies/${id}`, { method: 'DELETE' }),
+ getShowtimes: id => req(id ? `/api/showtimes/movie/${id}` : '/api/showtimes'),
+ getShowtime: id => req(`/api/showtimes/${id}`),
+ postShowtime: b => req('/api/showtimes', { method: 'POST', body: JSON.stringify(b) }),
+ putShowtime: (id, b) => req(`/api/showtimes/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
+ delShowtime: id => req(`/api/showtimes/${id}`, { method: 'DELETE' }),
+ createBooking: b => req('/api/bookings', { method: 'POST', body: JSON.stringify(b) }),
+ getUserBookings: uid => req(`/api/bookings/user/${uid}`),
+ getAllBookings: () => req('/api/bookings'),
+ cancelBooking: id => req(`/api/bookings/${id}/cancel`, { method: 'PUT' }),
+ processPayment: b => req('/api/payments', { method: 'POST', body: JSON.stringify(b) }),
+ getAllPayments: () => req('/api/payments'),
+ getTheaters: () => req('/api/theaters'),
+ getTheater: id => req(`/api/theaters/${id}`),
+ postTheater: b => req('/api/theaters', { method: 'POST', body: JSON.stringify(b) }),
+ putTheater: (id, b) => req(`/api/theaters/${id}`, { method: 'PUT', body: JSON.stringify(b) }),
+ delTheater: id => req(`/api/theaters/${id}`, { method: 'DELETE' })
+};
+
+/* ───── UTILS ───── */
+const fmtD = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const fmtT = d => new Date(d).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+const fmtC = v => 'LKR ' + Number(v).toLocaleString();
+const TAX_RATE = 0.1;
+
+function toast(m, t = 'success') {
+ const c = document.getElementById('toasts');
+ const e = document.createElement('div');
+ e.style.cssText = 'background:var(--card);padding:1rem 1.5rem;border-radius:12px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.5);font-size:.88rem;display:flex;align-items:center;gap:.8rem;animation:slideIn .2s ease';
+ e.innerHTML = `<span>${t === 'success' ? '✅' : '❌'}</span><span>${m}</span>`;
+ c.appendChild(e); setTimeout(() => e.remove(), 3500);
+}
+function showModal(h) { document.getElementById('modal-box').innerHTML = h; document.getElementById('modal-bg').classList.remove('hidden'); document.getElementById('modal-box').classList.remove('hidden'); }
+function closeModal() { document.getElementById('modal-bg').classList.add('hidden'); document.getElementById('modal-box').classList.add('hidden'); }
+
+/* ───── ROUTING ───── */
+let curP = 'home', curO = {};
+function navigate(p, o = {}) {
+ curP = p; curO = o;
+ document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));
+ document.getElementById(`page-${p}`)?.classList.remove('hidden');
+ renderNav(); INIT[p]?.(); window.scrollTo(0, 0);
+}
+function renderNav() {
+ const u = A.getUser(), li = A.isLoggedIn();
+ document.getElementById('nav-links').innerHTML = `
+   <span class="nav-link ${curP==='home'?'active':''}" onclick="navigate('home')">Home</span>
+   ${li && !A.isAdmin() ? `<span class="nav-link ${curP==='mybookings'?'active':''}" onclick="navigate('mybookings')">My Tickets</span>` : ''}      ${li ? `<span class="nav-link ${curP==='mybookings'?'active':''}" onclick="navigate('mybookings')">My Tickets</span>` : ''}
+   ${li && A.isAdmin() ? `<span class="nav-link ${curP==='admin'?'active':''}" onclick="navigate('admin')">Admin</span>` : ''}`;
+  document.getElementById('nav-actions').innerHTML = li
+   ? `<span style="font-size:.85rem;color:var(--muted)">Hi, ${u.name.split(' ')[0]}</span><button class="btn btn-ghost btn-sm" onclick="A.logout()">Logout</button>`
+   : `<button class="btn btn-ghost btn-sm" onclick="navigate('login')">Login</button><button class="btn btn-purple btn-sm" onclick="navigate('register')">Register</button>`;
+}
+
+/* ───── HOME ───── */
+let _allMovies = [];
+const INIT = {
+ home: async () => {
+   const g = document.getElementById('home-grid');
+   try {
+     const d = await API.getMovies(); _allMovies = d.data || d;
+     populateQB(_allMovies);
+     renderHomeGrid('now');
+   } catch { g.innerHTML = '<p class="empty">Failed to load content.</p>'; }
+ },
+ movies: async () => {
+   const g = document.getElementById('mov-grid');
+   try {
+     const d = await API.getMovies(); window._mv = d.data || d;
+     renderMovies(window._mv); renderGenres(window._mv);
+   } catch { g.innerHTML = '<p class="empty">Failed to load movies.</p>'; }
+ },
+ booking: async () => {
+   const id = curO.id;
+   document.getElementById('bk-main').style.display = 'none';
+   document.getElementById('bk-seat-sec').classList.add('hidden');
+   document.getElementById('bk-hero').innerHTML = '<div class="loading"><div class="spin"></div></div>';
+   try {
+     const m = await API.getMovie(id); window._bm = m.data || m;
+     renderBkHero(window._bm);
+     buildDateStrip();
+     const sts = await API.getShowtimes(id); window._sts = sts.data || sts;
+     renderSTGroups(window._sts);
+     document.getElementById('bk-main').style.display = '';
+     updSum();
+   } catch (e) { toast(e.message, 'error'); }
+ },
+ payment: () => {
+   if (!window._bm || !window._st || !window._ss?.length) { navigate('movies'); return; }
+   renderPaySummary();
+   document.getElementById('terms-cb').checked = false;
+   document.getElementById('pay-final-btn').disabled = true;
+ },
+ mybookings: async () => {
+   const list = document.getElementById('bk-list');
+   list.innerHTML = '<div class="loading"><div class="spin"></div></div>';
+   try {
+     const d = await API.getUserBookings(A.getUser()?.id || 1);
+     const bks = d.data || d || [];
+     list.innerHTML = bks.length ? bks.map(b => `
+       <div class="bk-card">
+         <div class="bk-card-head">
+           <div class="bk-card-poster">🎟️</div>
+           <div class="bk-card-body">
+             <div class="bk-card-title">${b.movieTitle || 'Movie Ticket'}</div>
+             <div class="bk-card-meta">
+               <span>🏛️ ${b.theaterName || 'CinéMax Cinema'}</span>
+               <span>📅 ${fmtD(b.bookingDate)}</span>
+               <span>🎫 ${b.seatIds?.join(', ') || 'N/A'}</span>
+             </div>
+             <span class="status status-${b.status}">${b.status}</span>
+           </div>
+         </div>
+         <div class="bk-card-foot">
+           <span style="font-weight:700;color:var(--purple)">${fmtC(b.totalAmount)}</span>
+           ${b.status !== 'CANCELLED' ? `<button class="btn btn-ghost btn-sm" onclick="cancelBk(${b.id})">Cancel Ticket</button>` : ''}
+         </div>
+       </div>`).join('') : '<p class="empty"><div class="ico">🎟️</div>No tickets found. Book your first movie!</p>';
+   } catch { list.innerHTML = '<p class="empty">Failed to load tickets.</p>'; }
+ },
+ admin: () => admNav('dash')
+};
+
+function homeTab(type, el) {
+ document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+ el.classList.add('active'); renderHomeGrid(type);
+}
+function renderHomeGrid(type) {
+ const g = document.getElementById('home-grid');
+ const mv = type === 'now'
+   ? _allMovies.filter(m => m.status === 'NOW_SHOWING' || !m.status)
+   : _allMovies.filter(m => m.status === 'COMING_SOON');
+ g.innerHTML = (mv.length ? mv : _allMovies).slice(0, 8).map(m => mCard(m)).join('') || '<p class="empty">Nothing here yet.</p>';
+}
+function populateQB(mv) {
+ const sel = document.getElementById('qb-movie');
+ sel.innerHTML = '<option value="">Select Movie</option>' + mv.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
+ const dates = document.getElementById('qb-date');
+ const days = Array.from({length:7}, (_,i) => { const d = new Date(); d.setDate(d.getDate()+i); return d; });
+ dates.innerHTML = '<option value="">Select Date</option>' + days.map(d => `<option value="${d.toDateString()}">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</option>`).join('');
+}
+function qbGo() {
+ const mid = document.getElementById('qb-movie').value;
+ if (!mid) { toast('Please select a movie', 'error'); return; }
+ navigate('booking', { id: mid });
+}
+
+/* ───── MOVIES PAGE ───── */
+function mCard(m) {
+ return `<div class="movie-card" onclick="navigate('booking',{id:${m.id}})">
+   <div class="poster">
+     <img src="${m.posterUrl}" onerror="this.src='https://placehold.co/400x600/1a1d28/7c3aed?text=🎬'">
+     <div class="poster-overlay"><button class="btn btn-purple btn-sm">Book Now</button></div>
+     ${m.status === 'COMING_SOON' ? '<span class="badge badge-soon">Coming Soon</span>' : '<span class="badge badge-new">Now Showing</span>'}
+   </div>
+   <div class="card-info"><div class="card-title">${m.title}</div><div class="card-meta">${m.genre || ''} • ${m.language || ''}</div></div>
+ </div>`;
+}
+function renderMovies(mv) { document.getElementById('mov-grid').innerHTML = mv.length ? mv.map(m => mCard(m)).join('') : '<p class="empty">No movies found.</p>'; }
+function renderGenres(mv) {
+ const gs = ['All', ...new Set(mv.map(m => m.genre).filter(Boolean))];
+ document.getElementById('genre-chips').innerHTML = gs.map(g => `<span class="chip ${g==='All'?'active':''}" onclick="filterGenre('${g}',this)">${g}</span>`).join('');
+}
+function filterGenre(g, el) {
+ document.querySelectorAll('.chip').forEach(c => c.classList.remove('active')); el.classList.add('active');
+ renderMovies(g === 'All' ? window._mv : window._mv.filter(m => m.genre === g));
+}
+function filterMov() {
+ const q = document.getElementById('mov-q').value.toLowerCase();
+ renderMovies(window._mv.filter(m => m.title.toLowerCase().includes(q) || (m.genre || '').toLowerCase().includes(q)));
+}
+
+/* ───── AUTH ───── */
+async function doLogin(e) {
+ e.preventDefault(); const b = document.getElementById('li-btn'); b.disabled = true; b.textContent = 'Signing in…';
+ const err = document.getElementById('li-err'); err.classList.add('hidden');
+ try {
+   const d = await API.login({ email: document.getElementById('li-email').value, password: document.getElementById('li-pwd').value });
+   A.save(d.token, { id: d.userId, name: d.name || 'User', role: d.role || 'USER' });
+   toast('Welcome back! 🎬'); navigate('home');
+ } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
+ finally { b.disabled = false; b.textContent = 'Sign In'; }
+}
+async function doReg(e) {
+ e.preventDefault(); const b = document.getElementById('rg-btn'); b.disabled = true;
+ const err = document.getElementById('rg-err'); err.classList.add('hidden');
+ try {
+   await API.register({ name: document.getElementById('rg-name').value, email: document.getElementById('rg-email').value, password: document.getElementById('rg-pwd').value, role: document.getElementById('rg-role').value });
+   toast('Account created! Please sign in.'); navigate('login');
+ } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); }
+ finally { b.disabled = false; }
+}
+
+/* ───── BOOKING ───── */
+function renderBkHero(m) {
+ document.getElementById('bk-hero').innerHTML = `
+   <div class="mv-hero-bg" style="background-image:url(${m.posterUrl})"></div>
+   <div class="mv-hero-content">
+     <img class="mv-poster" src="${m.posterUrl}" onerror="this.src='https://placehold.co/120x180/1a1d28/7c3aed?text=🎬'">
+     <div class="mv-info">
+       <h1>${m.title}</h1>
+       <p style="color:var(--muted);font-size:.9rem;margin-top:.3rem">${m.description || ''}</p>
+       <div class="mv-tags">
+         ${m.genre ? `<span class="mv-tag">${m.genre}</span>` : ''}
+         ${m.language ? `<span class="mv-tag">${m.language}</span>` : ''}
+         ${m.duration ? `<span class="mv-tag">${m.duration} min</span>` : ''}
+         ${m.status ? `<span class="mv-tag" style="background:rgba(124,58,237,.2);color:var(--purple-light)">${m.status.replace('_',' ')}</span>` : ''}
+       </div>
+     </div>
+   </div>`;
+}
+
+function buildDateStrip() {
+ const strip = document.getElementById('date-strip');
+ const days = Array.from({length: 7}, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+ window._selDate = days[0].toDateString();
+ strip.innerHTML = days.map((d, i) => `
+   <div class="date-chip ${i===0?'active':''}" onclick="selDate('${d.toDateString()}',this)">
+     <div class="date-day">${d.toLocaleDateString('en-US',{weekday:'short'})}</div>
+     <div class="date-num">${d.getDate()}</div>
+     <div class="date-lbl">${d.toLocaleDateString('en-US',{month:'short'})}</div>
+   </div>`).join('');
+}
+
+function selDate(ds, el) {
+ document.querySelectorAll('.date-chip').forEach(c => c.classList.remove('active')); el.classList.add('active');
+ window._selDate = ds;
+ if (window._sts) renderSTGroups(window._sts);
+}
+
+function renderSTGroups(sts) {
+ const container = document.getElementById('st-groups');
+ // Group by screen type (screenName or default)
+ const groups = {};
+ sts.forEach(s => {
+   const key = s.screenName || s.screenType || 'Standard';
+   if (!groups[key]) groups[key] = [];
+   groups[key].push(s);
+ });
+ if (!Object.keys(groups).length) { container.innerHTML = '<p class="empty">No showtimes available for this date.</p>'; return; }
+ container.innerHTML = Object.entries(groups).map(([name, list]) => `
+   <div class="st-group">
+     <div class="st-group-label">${name}</div>
+     <div class="st-pills">
+       ${list.map(s => `
+         <div class="st-pill" id="st-${s.id}" onclick="pickST(${s.id},${s.price},'${s.startTime}','${s.screenName||'Standard'}')">
+           <div class="st-pill-time">${fmtT(s.startTime)}</div>
+           <div class="st-pill-lang">${s.language || 'English'} • ${fmtC(s.price)}</div>
+         </div>`).join('')}
+     </div>
+   </div>`).join('');
+}
+
+function pickST(id, p, t, screen) {
+ window._st = { id, price: p, time: t, screen }; window._ss = [];
+ document.querySelectorAll('.st-pill').forEach(c => c.classList.remove('sel'));
+ document.getElementById(`st-${id}`)?.classList.add('sel');
+ document.getElementById('bk-seat-sec').classList.remove('hidden');
+ buildMap(); updSum();
+}
+
+function buildMap() {
+ const m = document.getElementById('seat-map'); m.innerHTML = '';
+ ['A','B','C','D','E','F'].forEach(r => {
+   const row = document.createElement('div'); row.className = 'seat-row';
+   const lbl = document.createElement('div'); lbl.className = 'rl'; lbl.textContent = r; row.appendChild(lbl);
+   for (let i = 1; i <= 10; i++) {
+     if (i === 4 || i === 8) { const a = document.createElement('div'); a.className = 'aisle'; row.appendChild(a); }
+     const sid = `${r}${i}`, occ = Math.random() < 0.18;
+     const s = document.createElement('div'); s.className = `seat ${occ?'occ':'av'}`; s.textContent = i;
+     if (!occ) s.onclick = () => toggleSeat(sid, s);
+     row.appendChild(s);
+   }
+   m.appendChild(row);
+ });
+}
+
+function toggleSeat(id, el) {
+ if (!A.isLoggedIn()) { toast('Please login to continue', 'error'); navigate('login'); return; }
+ if (el.classList.contains('sel')) { el.classList.remove('sel'); el.classList.add('av'); window._ss = window._ss.filter(x => x !== id); }
+ else { if (window._ss.length >= 8) { toast('Max 8 seats allowed', 'error'); return; } el.classList.remove('av'); el.classList.add('sel'); window._ss.push(id); }
+ updSum();
+}
+
+function updSum() {
+ const m = window._bm, st = window._st, ss = window._ss || [];
+ document.getElementById('sum-title').textContent = m?.title || '—';
+ document.getElementById('sum-sub').textContent = m ? `${m.genre || ''} • ${m.language || ''}` : '—';
+ document.getElementById('sum-dt').textContent = st ? `${fmtD(st.time)} @ ${fmtT(st.time)}` : '—';
+ document.getElementById('sum-screen').textContent = st?.screen || '—';
+ document.getElementById('sum-seats').textContent = ss.length ? ss.map(s => `<span class="seat-tag">${s}</span>`).join('') : '—';
+ document.getElementById('sum-tickets').textContent = st ? `${ss.length} × ${fmtC(st.price)}` : '—';
+ const total = ss.length * (st?.price || 0);
+ document.getElementById('sum-total').textContent = fmtC(total);
+ document.getElementById('pay-btn-open').disabled = !ss.length;
+ // Update poster if available
+ if (m?.posterUrl) {
+   const si = document.getElementById('sum-movie-info');
+   const img = si.querySelector('img') || document.createElement('img');
+   img.src = m.posterUrl; img.className = 'bk-sum-poster'; img.onerror = () => img.style.display='none';
+   si.querySelector('div:first-child')?.replaceWith(img);
+ }
+}
+
+/* ───── PAYMENT PAGE ───── */
+let _selPayMethod = 'CARD';
+function selPay(el, method) {
+ document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('sel'));
+ el.classList.add('sel'); _selPayMethod = method;
+ document.getElementById('card-section').style.display = method === 'CARD' ? '' : 'none';
+}
+function checkTerms() {
+ document.getElementById('pay-final-btn').disabled = !document.getElementById('terms-cb').checked;
+}
+function renderPaySummary() {
+ const m = window._bm, st = window._st, ss = window._ss || [];
+ const sub = ss.length * (st?.price || 0);
+ const tax = Math.round(sub * TAX_RATE);
+ const total = sub + tax;
+ document.getElementById('pay-sum-title').textContent = m?.title || '—';
+ document.getElementById('pay-sum-sub').textContent = m ? `${m.genre||''} • ${m.language||''} • ${fmtD(st?.time)}` : '—';
+ document.getElementById('pay-sum-dt').textContent = st ? `${fmtD(st.time)}, ${fmtT(st.time)}` : '—';
+ document.getElementById('pay-sum-seats').textContent = ss.join(', ') || '—';
+ document.getElementById('pay-sum-tickets').textContent = `${ss.length} × ${fmtC(st?.price || 0)}`;
+ document.getElementById('pay-sum-sub2').textContent = fmtC(sub);
+ document.getElementById('pay-sum-tax').textContent = fmtC(tax);
+ document.getElementById('pay-sum-total').textContent = fmtC(total);
+ // poster
+ if (m?.posterUrl) {
+   const img = document.getElementById('pay-sum-poster');
+   const icon = document.getElementById('pay-sum-icon');
+   img.src = m.posterUrl; img.style.display = ''; icon.style.display = 'none';
+ }
+}
+
+async function doPayment() {
+ const btn = document.getElementById('pay-final-btn');
+ btn.disabled = true; btn.textContent = 'Processing…';
+ try {
+   const u = A.getUser();
+   const ss = window._ss, st = window._st;
+   const sub = ss.length * st.price, tax = Math.round(sub * TAX_RATE), total = sub + tax;
+   const b = await API.createBooking({ userId: u?.id || 1, showtimeId: st.id, seatIds: ss });
+   await API.processPayment({ bookingId: b.id || b.data?.id, paymentMethod: _selPayMethod, amount: total });
+   toast('Booking confirmed! Enjoy the movie 🍿'); navigate('mybookings');
+ } catch (e) {
+   const err = document.getElementById('pay-err'); err.textContent = e.message; err.classList.remove('hidden');
+   toast(e.message, 'error');
+ } finally { btn.disabled = false; btn.textContent = 'Confirm Payment'; }
+}
+
+async function cancelBk(id) {
+ if (confirm('Cancel this ticket?')) {
+   try { await API.cancelBooking(id); toast('Ticket cancelled'); INIT.mybookings(); }
+   catch (e) { toast(e.message, 'error'); }
+ }
+}
+
+/* ───── ADMIN ───── */
+function admNav(p) {
+ document.querySelectorAll('.admin-main > div').forEach(el => el.classList.add('hidden'));
+ document.getElementById(`adm-${p}`).classList.remove('hidden');
+ document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+ document.querySelector(`[onclick="admNav('${p}')"]`).classList.add('active');
+ ADM_INIT[p]?.();
+}
+const ADM_INIT = {
+ dash: async () => {
+   const [mv,bk,py,th] = await Promise.allSettled([API.getMovies(),API.getAllBookings(),API.getAllPayments(),API.getTheaters()]);
+   const dat = [mv,bk,py,th].map(r => r.value?.data || r.value || []);
+   document.getElementById('adm-stats').innerHTML = [['🎬','Movies',dat[0].length],['🎟️','Bookings',dat[1].length],['💰','Revenue',fmtC(dat[2].reduce((a,c)=>a+c.amount,0))],['🏛️','Theaters',dat[3].length]].map(([ic,l,v])=>
+     `<div class="stat-card"><div style="font-size:1.5rem">${ic}</div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
+   document.getElementById('adm-recent').innerHTML = dat[1].slice(0,5).map(b=>`<tr><td>#${b.id}</td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${fmtC(b.totalAmount)}</td><td><span class="status status-${b.status}">${b.status}</span></td></tr>`).join('');
+ },
+ mov: async () => {
+   const d = await API.getMovies(); const mv = d.data || d;
+   document.getElementById('tbl-mov').innerHTML = mv.map(m=>`<tr><td class="b">${m.title}</td><td>${m.genre}</td><td>${m.status||'—'}</td><td><button class="btn btn-ghost btn-sm" onclick="editMov(${m.id})">Edit</button> <button class="btn btn-ghost btn-sm" onclick="delMv(${m.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="4" class="empty">No movies found.</td></tr>';
+ },
+ st: async () => {
+   const d = await API.getShowtimes(); const sts = d.data || d;
+   document.getElementById('tbl-st').innerHTML = sts.map(s=>`<tr><td class="b">${s.movieTitle}</td><td>${fmtD(s.startTime)} ${fmtT(s.startTime)}</td><td>${fmtC(s.price)}</td><td>${s.availableSeats}</td><td><button class="btn btn-ghost btn-sm" onclick="editSt(${s.id})">Edit</button> <button class="btn btn-ghost btn-sm" onclick="delSt(${s.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="5" class="empty">No showtimes found.</td></tr>';
+ },
+ bk: async () => {
+   const d = await API.getAllBookings(); const bks = d.data || d;
+   document.getElementById('tbl-bk').innerHTML = bks.map(b=>`<tr><td class="b">#${b.id}</td><td>${b.userName}</td><td>${b.movieTitle}</td><td>${fmtC(b.totalAmount)}</td><td><span class="status status-${b.status}">${b.status}</span></td><td>${b.status!=='CANCELLED'?`<button class="btn btn-ghost btn-sm" onclick="cancelBkAdm(${b.id})">Cancel</button>`:''}</td></tr>`).join('') || '<tr><td colspan="6" class="empty">No bookings found.</td></tr>';
+ },
+ th: async () => {
+   const d = await API.getTheaters(); const ths = d.data || d;
+   document.getElementById('tbl-th').innerHTML = ths.map(t=>`<tr><td class="b">${t.name}</td><td>${t.location}</td><td>${t.totalScreens}</td><td><button class="btn btn-ghost btn-sm" onclick="editTh(${t.id})">Edit</button> <button class="btn btn-ghost btn-sm" onclick="delTh(${t.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="4" class="empty">No theaters found.</td></tr>';
+ }
+};
+
+async function delMv(id) { if(confirm('Delete movie?')) { try { await API.delMovie(id); toast('Movie deleted'); ADM_INIT.mov(); } catch(e) { toast(e.message,'error'); } } }
+async function delSt(id) { if(confirm('Delete showtime?')) { try { await API.delShowtime(id); toast('Showtime deleted'); ADM_INIT.st(); } catch(e) { toast(e.message,'error'); } } }
+async function cancelBkAdm(id) { if(confirm('Cancel booking?')) { try { await API.cancelBooking(id); toast('Booking cancelled'); ADM_INIT.bk(); } catch(e) { toast(e.message,'error'); } } }
+async function delTh(id) { if(confirm('Delete theater?')) { try { await API.delTheater(id); toast('Theater deleted'); ADM_INIT.th(); } catch(e) { toast(e.message,'error'); } } }
+
+function openMovModal(m=null) {
+ showModal(`<h3>${m?'Edit':'Add New'} Movie</h3><br>
+   <form onsubmit="subMov(event,${m?m.id:'null'})">
+     <div class="form-g"><label>Title</label><input name="title" value="${m?m.title:''}" required></div>
+     <div class="form-row"><div class="form-g"><label>Genre</label><input name="genre" value="${m?m.genre:''}" required></div><div class="form-g"><label>Language</label><input name="language" value="${m?m.language:'English'}" required></div></div>
+     <div class="form-row"><div class="form-g"><label>Duration (min)</label><input name="duration" type="number" value="${m?m.duration:120}" required></div><div class="form-g"><label>Release Date</label><input name="releaseDate" type="date" value="${m?m.releaseDate:''}"></div></div>
+     <div class="form-g"><label>Poster URL</label><input name="posterUrl" value="${m?m.posterUrl:''}"></div>
+     <div class="form-g"><label>Status</label><select name="status"><option value="NOW_SHOWING" ${m?.status==='NOW_SHOWING'?'selected':''}>Now Showing</option><option value="COMING_SOON" ${m?.status==='COMING_SOON'?'selected':''}>Coming Soon</option></select></div>
+     <div class="form-g"><label>Description</label><textarea name="description" rows="3">${m?m.description:''}</textarea></div>
+     <button type="submit" class="btn btn-purple btn-block">Save Movie</button>
+   </form>`);
+}
+async function subMov(e,id) { e.preventDefault(); const b=Object.fromEntries(new FormData(e.target)); try { id?await API.putMovie(id,b):await API.postMovie(b); toast(id?'Movie updated':'Movie added'); closeModal(); ADM_INIT.mov(); } catch(e){toast(e.message,'error');} }
+async function editMov(id) { try { const d=await API.getMovie(id); openMovModal(d.data||d); } catch(e){toast(e.message,'error');} }
+
+function openStModal(s=null) {
+ showModal(`<h3>${s?'Edit':'Add'} Showtime</h3><br>
+   <form onsubmit="subSt(event,${s?s.id:'null'})">
+     <div class="form-row"><div class="form-g"><label>Movie ID</label><input name="movieId" type="number" value="${s?s.movieId:''}" required></div><div class="form-g"><label>Screen ID</label><input name="screenId" type="number" value="${s?s.screenId:''}" required></div></div>
+     <div class="form-row"><div class="form-g"><label>Start Time</label><input name="startTime" type="datetime-local" value="${s?s.startTime.substring(0,16):''}" required></div><div class="form-g"><label>End Time</label><input name="endTime" type="datetime-local" value="${s?s.endTime?.substring(0,16):''}" required></div></div>
+     <div class="form-row"><div class="form-g"><label>Price (LKR)</label><input name="price" type="number" step="0.01" value="${s?s.price:''}" required></div><div class="form-g"><label>Total Seats</label><input name="availableSeats" type="number" value="${s?s.availableSeats:60}" required></div></div>
+     <button type="submit" class="btn btn-purple btn-block">Save Showtime</button>
+   </form>`);
+}
+async function subSt(e,id) { e.preventDefault(); const b=Object.fromEntries(new FormData(e.target)); try { id?await API.putShowtime(id,b):await API.postShowtime(b); toast(id?'Showtime updated':'Showtime added'); closeModal(); ADM_INIT.st(); } catch(e){toast(e.message,'error');} }
+async function editSt(id) { try { const d=await API.getShowtime(id); openStModal(d.data||d); } catch(e){toast(e.message,'error');} }
+
+function openThModal(t=null) {
+ showModal(`<h3>${t?'Edit':'Add New'} Theater</h3><br>
+   <form onsubmit="subTh(event,${t?t.id:'null'})">
+     <div class="form-g"><label>Theater Name</label><input name="name" value="${t?t.name:''}" required></div>
+     <div class="form-row"><div class="form-g"><label>City</label><input name="city" value="${t?t.city:''}" required></div><div class="form-g"><label>Location</label><input name="location" value="${t?t.location:''}" required></div></div>
+     <div class="form-row"><div class="form-g"><label>Total Screens</label><input name="totalScreens" type="number" min="1" value="${t?t.totalScreens:1}"></div><div class="form-g"><label>Phone</label><input name="phone" value="${t?t.phone:''}"></div></div>
+     <button type="submit" class="btn btn-purple btn-block">Save Theater</button>
+   </form>`);
+}
+async function subTh(e,id) { e.preventDefault(); const b=Object.fromEntries(new FormData(e.target)); try { id?await API.putTheater(id,b):await API.postTheater(b); toast(id?'Theater updated':'Theater added'); closeModal(); ADM_INIT.th(); } catch(e){toast(e.message,'error');} }
+async function editTh(id) { try { const d=await API.getTheater(id); openThModal(d.data||d); } catch(e){toast(e.message,'error');} }
+
+navigate('home');
 </script>
 </body>
 </html>

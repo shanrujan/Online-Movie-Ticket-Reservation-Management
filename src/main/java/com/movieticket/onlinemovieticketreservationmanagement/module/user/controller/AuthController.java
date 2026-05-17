@@ -8,8 +8,7 @@ import com.movieticket.onlinemovieticketreservationmanagement.module.user.servic
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+
 
 /*
 * Controller class for handling authentication operation

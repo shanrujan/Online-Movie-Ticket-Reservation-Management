@@ -3,6 +3,7 @@ package com.movieticket.onlinemovieticketreservationmanagement.module.user.model
 import jakarta.persistence.*;
 import lombok.*;
 
+//Modle Class
 @Entity
 @Table(name = "users")
 @Data

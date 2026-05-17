@@ -30,6 +30,6 @@ public class User {
 
     public String getFullName()
     {
-
+        return getFullName();
     }
 }

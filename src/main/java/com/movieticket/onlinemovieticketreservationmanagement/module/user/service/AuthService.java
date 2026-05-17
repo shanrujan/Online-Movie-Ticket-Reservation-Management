@@ -28,7 +28,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
 
         // Check admin key FIRST
-        if (request.getRole() == Role.ADMIN) {
+        if (request.getRole() == Role.ADMIN_USER) {
             if (request.getAdminKey() == null || !request.getAdminKey().equals("ADMIN123")) {
                 throw new RuntimeException("Incorrect Admin key entered");
             }

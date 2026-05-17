@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import com.movieticket.onlinemovieticketreservationmanagement.module.booking.repository.BookingRepository;
+import com.movieticket.onlinemovieticketreservationmanagement.module.movie.model.Showtime;
+import com.movieticket.onlinemovieticketreservationmanagement.module.movie.repository.ShowtimeRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,8 @@ public class SeatService {
 
     private final SeatRepository seatRepository;
     private final ScreenRepository screenRepository;
+    private final BookingRepository bookingRepository;
+    private final ShowtimeRepository showtimeRepository;
 
     // Get all seats by screen
     public List<SeatResponse> getSeatsByScreen(Long screenId) {
@@ -27,6 +32,44 @@ public class SeatService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    // Get seats by showtime (with status)
+    public List<SeatResponse> getSeatsByShowtime(Long showtimeId) {
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Showtime not found with id: " + showtimeId));
+        Screen screen = showtime.getScreen();
+        List<Seat> seats = seatRepository.findByScreenId(screen.getId());
+        
+        // Auto-generate missing seats (self-healing)
+        if (seats.size() < 60) {
+            String[] rows = {"A", "B", "C", "D", "E", "F"};
+            for (String row : rows) {
+                for (int i = 1; i <= 10; i++) {
+                    String seatNum = row + i;
+                    boolean exists = seats.stream().anyMatch(s -> s.getSeatNumber().equals(seatNum));
+                    if (!exists) {
+                        Seat newSeat = Seat.builder()
+                                .seatNumber(seatNum)
+                                .seatType(com.movieticket.onlinemovieticketreservationmanagement.module.theater.model.SeatType.REGULAR)
+                                .screen(screen)
+                                .build();
+                        seatRepository.save(newSeat);
+                        seats.add(newSeat);
+                    }
+                }
+            }
+        }
+
+        List<Long> bookedSeatIds = bookingRepository.findBookedSeatIdsByShowtimeId(showtimeId);
+        
+        return seats.stream().map(seat -> {
+            SeatResponse response = mapToResponse(seat);
+            if (bookedSeatIds.contains(seat.getId())) {
+                response.setStatus("BOOKED");
+            }
+            return response;
+        }).collect(Collectors.toList());
     }
 
     // Get seat by ID
@@ -74,7 +117,8 @@ public class SeatService {
                 seat.getSeatNumber(),
                 seat.getSeatType().name(),
                 seat.getScreen().getId(),
-                seat.getScreen().getName()
+                seat.getScreen().getName(),
+                "AVAILABLE"
         );
     }
 }

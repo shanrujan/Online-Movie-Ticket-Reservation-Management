@@ -18,7 +18,7 @@ public class BookingController {
 
         private final BookingService bookingService;
 
-        // Create booking
+        // Create bookings
         @PostMapping
         public ResponseEntity<ApiResponse<BookingResponse>> createBooking(
                         @RequestBody BookingRequest request) {
@@ -61,4 +61,12 @@ public class BookingController {
                 return ResponseEntity.ok(
                                 ApiResponse.success(bookingService.getAllBookings()));
         }
+
+        @GetMapping("/ping")
+        public String ping() {
+                return "Booking controller working";
+        }
+
+
+}
 }

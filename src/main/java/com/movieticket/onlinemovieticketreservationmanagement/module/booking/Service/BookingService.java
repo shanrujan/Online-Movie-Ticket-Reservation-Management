@@ -63,9 +63,21 @@ public class BookingService {
         List<BookingItem> bookingItems = new ArrayList<>();
 
         for (Long seatId : request.getSeatIds()) {
+
             Seat seat = seatRepository.findById(seatId)
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Seat not found with id: " + seatId));
+
+                  boolean alreadyBooked = bookingRepository.existsByShowtimeIdAndBookingItemsSeatIdAndStatus(
+                    request.getShowtimeId(),
+                    seatId,
+                    BookingStatus.CONFIRMED
+            );
+
+            if (alreadyBooked) {
+                throw new BadRequestException(
+                        "Seat " + seat.getSeatNumber() + " is already booked");
+            }
 
             BookingItem item = new BookingItem();
             item.setBooking(booking);
@@ -93,9 +105,6 @@ public class BookingService {
 
     // ─── Get All Bookings By User ─────────────────────
     public List<BookingResponse> getUserBookings(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new ResourceNotFoundException("User not found");
-        }
         return bookingRepository.findByUserId(userId)
                 .stream()
                 .map(this::mapToResponse)
@@ -137,10 +146,14 @@ public class BookingService {
         return new BookingResponse(
                 booking.getId(),
                 booking.getUser().getName(),
+                booking.getShowtime().getMovie().getId(),
                 booking.getShowtime().getMovie().getTitle(),
                 booking.getShowtime().getScreen().getTheater().getName(),
                 booking.getShowtime().getStartTime(),
-                seatNumbers,
+                booking.getBookingItems()
+                        .stream()
+                        .map(item -> item.getSeat().getSeatNumber())
+                        .collect(Collectors.toList()),
                 booking.getTotalAmount(),
                 booking.getStatus().name(),
                 booking.getBookingTime()

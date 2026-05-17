@@ -11,4 +11,5 @@ public class SeatResponse {
     private String seatType;
     private Long screenId;
     private String screenName;
+    private String status; // "AVAILABLE" or "BOOKED"
 }

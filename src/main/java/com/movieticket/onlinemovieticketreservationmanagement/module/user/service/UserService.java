@@ -25,7 +25,7 @@ public class UserService {
         }
 
         User user = User.builder()
-                .name(request.getName())
+                .fullName(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
@@ -33,11 +33,7 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
 
-        return new UserResponse(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
-                savedUser.getRole());
+
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -53,7 +49,7 @@ public class UserService {
                 .message("Login successful")
                 .token(token)
                 .userId(user.getId())
-                .name(user.getName())
+                .name(user.getFullName())
                 .role(user.getRole())
                 .build();
     }

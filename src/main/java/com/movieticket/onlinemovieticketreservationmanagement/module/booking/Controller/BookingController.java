@@ -1,4 +1,4 @@
-package com.movieticket.onlinemovieticketreservationmanagement.module.booking.controller;
+package com.movieticket.onlinemovieticketreservationmanagement.module.booking.Controller;
 
 import com.movieticket.onlinemovieticketreservationmanagement.dto.response.ApiResponse;
 import com.movieticket.onlinemovieticketreservationmanagement.module.booking.dto.request.BookingRequest;
@@ -69,4 +69,4 @@ public class BookingController {
 
 
 }
-}
+

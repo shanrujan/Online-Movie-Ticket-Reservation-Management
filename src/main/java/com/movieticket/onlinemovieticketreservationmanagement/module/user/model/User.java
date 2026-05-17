@@ -28,7 +28,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    public String getFullName() {
-        return getFullName();
+    public String getFullName()
+    {
+
     }
 }

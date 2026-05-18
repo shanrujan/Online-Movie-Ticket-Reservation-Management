@@ -1,5 +1,6 @@
 package com.movieticket.onlinemovieticketreservationmanagement.module.theater.controller;
 //seat controller implemented by IT25101119
+//added a comment
 import com.movieticket.onlinemovieticketreservationmanagement.dto.response.ApiResponse;
 import com.movieticket.onlinemovieticketreservationmanagement.module.theater.dto.response.SeatResponse;
 import com.movieticket.onlinemovieticketreservationmanagement.module.theater.service.SeatService;

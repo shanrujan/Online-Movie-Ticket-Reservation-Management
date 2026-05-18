@@ -24,6 +24,7 @@ public class ScreenController {
 
     public ScreenController() {
         screenService = null;
+        seatService = null;
     }
 
 

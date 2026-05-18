@@ -23,6 +23,7 @@ public class ScreenService {
 
     public ScreenService() {
         screenRepository = null;
+        theaterRepository = null;
     }
 
     // Get all screens

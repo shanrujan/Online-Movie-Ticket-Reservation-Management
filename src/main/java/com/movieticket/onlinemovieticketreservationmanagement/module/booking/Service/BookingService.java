@@ -1,4 +1,4 @@
-package com.movieticket.onlinemovieticketreservationmanagement.module.booking.service;
+package com.movieticket.onlinemovieticketreservationmanagement.module.booking.Service;
 
 import com.movieticket.onlinemovieticketreservationmanagement.module.booking.repository.BookingRepository;
 import com.movieticket.onlinemovieticketreservationmanagement.module.booking.repository.BookingItemRepository;
@@ -145,7 +145,7 @@ public class BookingService {
 
         return new BookingResponse(
                 booking.getId(),
-                booking.getUser().getName(),
+                booking.getUser().getFullName(),
                 booking.getShowtime().getMovie().getId(),
                 booking.getShowtime().getMovie().getTitle(),
                 booking.getShowtime().getScreen().getTheater().getName(),

@@ -105,7 +105,7 @@ public class FeedbackService {
         return new FeedbackResponse(
                 feedback.getId(),
                 feedback.getUser().getId(),
-                feedback.getUser().getName(),
+                feedback.getUser().getFullName(),
                 feedback.getMovie().getId(),
                 feedback.getMovie().getTitle(),
                 feedback.getBooking() != null ? feedback.getBooking().getId() : null,

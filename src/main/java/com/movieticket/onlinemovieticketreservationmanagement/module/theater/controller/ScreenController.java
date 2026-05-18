@@ -22,6 +22,12 @@ public class ScreenController {
     private final ScreenService screenService;
     private final SeatService seatService;
 
+    public ScreenController() {
+        screenService = null;
+        seatService = null;
+    }
+
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<ScreenResponse>>> getAllScreens() {
         return ResponseEntity.ok(ApiResponse.success(screenService.getAllScreens()));

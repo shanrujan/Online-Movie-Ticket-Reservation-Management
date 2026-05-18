@@ -1,5 +1,5 @@
 package com.movieticket.onlinemovieticketreservationmanagement.module.theater.controller;
-
+//theater controller implemented by IT25101119
 import com.movieticket.onlinemovieticketreservationmanagement.dto.response.ApiResponse;
 import com.movieticket.onlinemovieticketreservationmanagement.module.theater.dto.request.TheaterRequest;
 import com.movieticket.onlinemovieticketreservationmanagement.module.theater.dto.response.TheaterResponse;

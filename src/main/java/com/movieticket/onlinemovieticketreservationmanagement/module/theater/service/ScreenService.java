@@ -21,6 +21,10 @@ public class ScreenService {
     private final ScreenRepository screenRepository;
     private final TheaterRepository theaterRepository;
 
+    public ScreenService() {
+        screenRepository = null;
+    }
+
     // Get all screens
     public List<ScreenResponse> getAllScreens() {
         return screenRepository.findAll()

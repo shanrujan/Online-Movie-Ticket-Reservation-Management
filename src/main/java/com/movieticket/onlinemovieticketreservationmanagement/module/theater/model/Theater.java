@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "theaters")
+@Table(name = "__Theaters__")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -18,6 +18,10 @@ public class TheaterController {
 
     private final TheaterService theaterService;
 
+    public TheaterController() {
+        theaterService = null;
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<TheaterResponse>>> getAllTheaters() {
         return ResponseEntity.ok(ApiResponse.success(theaterService.getAllTheaters()));

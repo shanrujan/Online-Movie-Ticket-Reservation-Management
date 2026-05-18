@@ -24,7 +24,8 @@ public class UserController {
     //request contain user register details
     //registers registered user information
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {//new user register to call service
+    public ResponseEntity<UserResponse> register(
+            @Valid @RequestBody RegisterRequest request) {//new user register to call service
         return ResponseEntity.status(201).body(userService.register(request));
     }
     //user login endpoint
@@ -32,7 +33,8 @@ public class UserController {
     //@return authentication response with token/details
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(userService.login(request));
     }
 }

@@ -16,6 +16,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false)
     private String fullName;
 
@@ -25,12 +28,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "contact_number")
+    private String contactNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
-    public String getFullName()
-    {
-        return getFullName();
-    }
 }

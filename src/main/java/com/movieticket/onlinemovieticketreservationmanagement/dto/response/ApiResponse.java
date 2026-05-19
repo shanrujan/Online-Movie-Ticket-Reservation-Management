@@ -11,6 +11,7 @@ public class ApiResponse<T> {
 
     private boolean success;
     private String message;
+    private T data;
 
 
     public static <T> ApiResponse<T> success(T data) {

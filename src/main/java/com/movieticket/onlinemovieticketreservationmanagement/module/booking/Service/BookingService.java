@@ -67,6 +67,17 @@ public class BookingService {
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Seat not found with id: " + seatId));
 
+            boolean alreadyBooked = bookingItemRepository.existsBookedSeat(
+                    seatId,
+                    request.getShowtimeId()
+            );
+
+            if (alreadyBooked) {
+                throw new BadRequestException(
+                        "Seat already booked: " + seat.getSeatNumber()
+                );
+            }
+
             BookingItem item = new BookingItem();
             item.setBooking(booking);
             item.setSeat(seat);
@@ -100,6 +111,9 @@ public class BookingService {
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+    public List<Long> getBookedSeats(Long showtimeId) {
+        return bookingItemRepository.getBookedSeatIds(showtimeId);
     }
 
     // ─── Cancel Booking ───────────────────────────────

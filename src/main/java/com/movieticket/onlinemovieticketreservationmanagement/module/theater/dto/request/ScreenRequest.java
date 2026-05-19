@@ -16,4 +16,11 @@ public class ScreenRequest {
 
     @NotNull(message = "Theater ID is required")
     private Long theaterId;
+
+    public Long getTheaterId() {
+        return 0L;
+    }
+
+    public String getName() {
+    }
 }

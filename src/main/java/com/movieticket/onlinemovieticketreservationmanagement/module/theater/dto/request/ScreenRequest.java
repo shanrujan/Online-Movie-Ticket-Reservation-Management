@@ -22,5 +22,6 @@ public class ScreenRequest {
     }
 
     public String getName() {
+        return "";
     }
 }

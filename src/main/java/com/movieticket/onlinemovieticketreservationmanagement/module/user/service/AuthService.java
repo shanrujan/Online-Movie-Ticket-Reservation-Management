@@ -29,7 +29,8 @@ public class AuthService {
 
         // Check admin key FIRST
         if (request.getRole() == Role.ADMIN_USER) {
-            if (request.getAdminKey() == null || !request.getAdminKey().equals("ADMIN123")) {
+            // Using the constant variable here for cleaner code
+            if (request.getAdminKey() == null || !request.getAdminKey().equals(ADMIN_SECRET_KEY)) {
                 throw new RuntimeException("Incorrect Admin key entered");
             }
         }
@@ -39,9 +40,18 @@ public class AuthService {
             throw new RuntimeException("Email already exists");
         }
 
+        // Generate a username from the email prefix (e.g., "john" from "john@gmail.com")
+        String generatedUsername = request.getEmail().split("@")[0];
+
+        // Safety check: If someone else already has this generated username, append a random number
+        if (userRepository.findByUsername(generatedUsername).isPresent()) {
+            generatedUsername = generatedUsername + (System.currentTimeMillis() % 1000);
+        }
+
         // Create user
         User user = User.builder()
                 .fullName(request.getName())
+                .username(generatedUsername) // Added this to satisfy the DB requirement!
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole())
@@ -64,7 +74,7 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found,incorrect"));
+                .orElseThrow(() -> new RuntimeException("User not found or incorrect"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid Password");

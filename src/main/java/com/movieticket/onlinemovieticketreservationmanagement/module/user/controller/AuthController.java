@@ -8,7 +8,8 @@ import com.movieticket.onlinemovieticketreservationmanagement.module.user.servic
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /*
 * Controller class for handling authentication operation
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController//marks this class as a rest API controller
 @RequestMapping("/api/auth")//Base URL for authentication endpoints
+@CrossOrigin(originPatterns = "*")
 @RequiredArgsConstructor//automatically creates constructor for final fields
 public class AuthController {
 

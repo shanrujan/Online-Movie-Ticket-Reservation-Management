@@ -36,6 +36,17 @@ public class BookingController {
                                 ApiResponse.success(bookingService.getBookingById(id)));
         }
 
+        @GetMapping("/showtime/{showtimeId}/booked-seats")
+        public ResponseEntity<ApiResponse<List<Long>>> getBookedSeats(
+                @PathVariable Long showtimeId) {
+
+                return ResponseEntity.ok(
+                        ApiResponse.success(
+                                bookingService.getBookedSeats(showtimeId)
+                        )
+                );
+        }
+
         // Get all bookings by user
         @GetMapping("/user/{userId}")
         public ResponseEntity<ApiResponse<List<BookingResponse>>> getUserBookings(
